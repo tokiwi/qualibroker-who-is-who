@@ -1,0 +1,33 @@
+version: "3"
+services:
+  directus:
+    image: directus/directus:10.9.2
+    ports:
+      - 8055:8055
+    volumes:
+      - ./database:/directus/database
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
+    environment:
+      KEY: "replace-with-random-value"
+      SECRET: "replace-with-random-value"
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "d1r3ctu5"
+      DB_CLIENT: "sqlite3"
+      DB_FILENAME: "/directus/database/data.db"
+      WEBSOCKETS_ENABLED: "true"
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "*"
+      EMAIL_FROM: "email@address.com"
+      EMAIL_TRANSPORT: "smtp"
+      EMAIL_SMTP_HOST: "mailcatcher"
+      EMAIL_SMTP_PORT: "1025"
+      EMAIL_SMTP_USER: "username"
+      EMAIL_SMTP_PASSWORD: "password"
+      ACCESS_TOKEN_TTL: "24h"
+  mailcatcher:
+    image: dockage/mailcatcher
+    ports:
+      - 1080:1080
+    environment:
+      SMTP_PORT: 1025
