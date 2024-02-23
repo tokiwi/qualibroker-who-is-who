@@ -98,7 +98,7 @@
             Photo de profil
           </div>
           <div class="p-6 bg-gray-100 flex items-center justify-center">
-            <img :src="img(state.image, { width: 300, format: 'jpg' })"
+            <img :src="img(state.avatar, { width: 300, format: 'jpg' })"
                  class="w-32 h-32 rounded-full outline outline-offset-4 outline-qualibroker-600" alt="">
           </div>
           <div class="p-6">
@@ -266,7 +266,7 @@ export default defineComponent({
       })
 
       console.log(result)
-      this.state.image = result.data.id;
+      this.state.avatar = result.data.id;
       await this.update();
 
       await this.fetchCurrentUser();
