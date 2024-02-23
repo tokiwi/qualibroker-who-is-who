@@ -155,6 +155,7 @@
               Compétences
             </div>
             <div class="font-medium">
+              {{ getSelectedPerson?.role }}
               {{ getSelectedPerson?.competences?.join(', ') || '-' }}
             </div>
           </div>
@@ -166,9 +167,13 @@
 
 <script lang="ts">
 import type { DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
+import {definePageMeta} from "#imports";
+
+definePageMeta({
+  middleware: ['auth'],
+});
 
 export default {
-  middleware: ['auth'],
   layout: 'default',
   data() {
     return {

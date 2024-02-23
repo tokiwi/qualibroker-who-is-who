@@ -115,12 +115,15 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {useDirectusUsers} from "#imports";
+import {definePageMeta, useDirectusUsers} from "#imports";
 import type {DirectusUser, DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
+
+definePageMeta({
+  middleware: ['auth'],
+});
 
 export default defineComponent({
   name: "me",
-  middleware: ['auth'],
   layout: 'default',
   data() {
     return {
