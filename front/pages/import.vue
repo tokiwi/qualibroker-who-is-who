@@ -20,6 +20,7 @@ import {useImport} from "~/composables/useImport";
 
 const users = ref();
 export default defineComponent({
+  middleware: ['auth'],
   name: "import",
   methods: {
     async importFile(event: any) {

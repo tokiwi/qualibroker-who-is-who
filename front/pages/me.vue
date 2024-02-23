@@ -120,6 +120,7 @@ import type {DirectusUser, DirectusUserRequest} from "nuxt-directus/dist/runtime
 
 export default defineComponent({
   name: "me",
+  middleware: ['auth'],
   layout: 'default',
   data() {
     return {

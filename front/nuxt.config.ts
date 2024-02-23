@@ -15,7 +15,9 @@ export default defineNuxtConfig({
   directus: {
     autoFetch: true,
     url: process.env.DIRECTUS_URL,
-  }
+  },
+
+  ssr: false,
 
   /*googleFonts: {
     families: {
