@@ -12,8 +12,11 @@
                 Informations
               </div>
               <div class="flex flex-col gap-3">
-                <UFormGroup label="Nom" name="name">
-                  <UInput v-model="state.name"/>
+                <UFormGroup label="Nom" name="last_name">
+                  <UInput v-model="state.last_name"/>
+                </UFormGroup>
+                <UFormGroup label="Nom" name="first_name">
+                  <UInput v-model="state.first_name"/>
                 </UFormGroup>
                 <UFormGroup label="Titre" name="title">
                   <UInput v-model="state.title"/>
@@ -35,8 +38,8 @@
                   </UFormGroup>
                 </template>
                 <template v-if="departements">
-                  <UFormGroup label="Département" name="departement">
-                    <USelectMenu v-model="state.departement"
+                  <UFormGroup label="Département" name="department">
+                    <USelectMenu v-model="state.department"
                                  searchable
                                  searchable-placeholder="Rechercher un département"
                                  value-attribute="id"
@@ -45,6 +48,7 @@
                   </UFormGroup>
                 </template>
                 <template v-if="referrers">
+
                   <UFormGroup label="Référant" name="referrer">
                     <USelectMenu v-model="state.referrer"
                                  searchable
@@ -63,6 +67,8 @@
               </div>
               <UFormGroup label="Jours" name="availability">
                 <div class="flex flex-wrap gap-3">
+
+
                   <template v-for="day in days">
                     <div>
                       <UCheckbox color="green" :ui="{'inner': 'ms-1 flex flex-col'}" v-model="state.availability"
@@ -109,8 +115,8 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import { createDirectus, rest, uploadFiles } from '@directus/sdk';
-
+import {useDirectusUsers} from "#imports";
+import type {DirectusUser, DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
 
 export default defineComponent({
   name: "me",
@@ -147,21 +153,7 @@ export default defineComponent({
           key: 'sunday'
         }
       ],
-      employes: [],
-      state: {
-        name: '',
-        title: '',
-        email: '',
-        phone: '',
-        schedule_start: '',
-        schedule_end: '',
-        departement: '',
-        batiment: '',
-        availability: [],
-        competences: [],
-        referrer: '',
-        image: '',
-      },
+      state: useDirectusUser(),
       batiments: [],
       departements: [],
       referrers: [],
@@ -169,10 +161,14 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.fetchCurrentEmploye();
     this.fetchBatiments();
     this.fetchDepartements();
     this.fetchReferrers();
+
+    if(this.state.availability == null)
+    {
+      this.state.availability = [];
+    }
   },
   methods: {
     img(params) {
@@ -193,14 +189,17 @@ export default defineComponent({
       }
     },
     async fetchReferrers() {
-      const {getItems} = useDirectusItems();
       try {
-        this.referrers = await getItems({
-          collection: "Employees",
+        this.referrers = await useDirectusUsers().getUsers({
           params: {
             fields: ["*"],
           }
         });
+
+        this.referrers = this.referrers.map(r=>({
+          ...r,
+          name: `${r.first_name} ${r.last_name}`
+        }))
       } catch (error) {
         console.log(error)
       }
@@ -218,47 +217,18 @@ export default defineComponent({
         console.log(error)
       }
     },
-    async fetchCurrentEmploye() {
-      const {getItems} = useDirectusItems();
-      const user = useDirectusUser();
-      const filters = {user: user.value.id};
-
-      try {
-        this.employes = await getItems({
-          collection: "Employees",
-          params: {
-            fields: ["*"],
-            filter: filters,
-          }
-        });
-        this.assignCurrentToState();
-      } catch (error) {
-        useToast().add({
-          id: 'error_fetch',
-          title: 'Erreur de récupération',
-          description: 'Il semble ne pas avoir d\'utilisateur associé à votre compte',
-          color: 'red'
-        })
-      }
-    },
-    assignCurrentToState() {
-      // get the first element of the array
-      const current = this.employes[0];
-
-      // assign each value to the state
-      for (const key in this.state) {
-        if (Object.prototype.hasOwnProperty.call(this.state, key)) {
-          this.state[key] = current[key];
-        }
-      }
-    },
     async update() {
       const {updateItem} = useDirectusItems();
-      try {
-        await updateItem({
-          collection: "Employees",
-          id: this.employes[0].id,
-          item: this.state,
+      // try {
+
+        let user = this.state;
+
+        delete user.tfa_secret
+        delete user.password
+
+        await useDirectusUsers().updateUser({
+          id:user.id,
+          user:user
         });
         useToast().add({
           id: 'valid_update',
@@ -266,14 +236,14 @@ export default defineComponent({
           description: 'Vos informations ont été mises à jour avec succès',
           color: 'green'
         })
-      } catch (e) {
-        useToast().add({
-          id: 'error_update',
-          title: 'Erreur de mise à jour',
-          description: 'Une erreur est survenue lors de la mise à jour de vos informations',
-          color: 'red'
-        })
-      }
+      // } catch (e) {
+      //   useToast().add({
+      //     id: 'error_update',
+      //     title: 'Erreur de mise à jour',
+      //     description: 'Une erreur est survenue lors de la mise à jour de vos informations',
+      //     color: 'red'
+      //   })
+      // }
     },
     resetForm() {
       this.assignCurrentToState();
@@ -299,7 +269,7 @@ export default defineComponent({
       this.state.image = result.data.id;
       await this.update();
 
-      await this.fetchCurrentEmploye();
+      await this.fetchCurrentUser();
     }
   }
 })

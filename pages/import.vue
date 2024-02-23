@@ -6,9 +6,9 @@
         <input type="file" ref="file">
         <UButton @click="importFile">Importer</UButton>
       </div>
-      <div>
-        <UButton color="gray" @click="downloadExampleFile">Télécharger un fichier d'exemple</UButton>
-      </div>
+      <a href="/exemple.xlsx" download="">
+        <UButton color="gray" >Télécharger un fichier d'exemple</UButton>
+      </a>
     </div>
   </div>
 </template>
@@ -17,21 +17,23 @@
 import {defineComponent} from 'vue'
 import {useImport} from "~/composables/useImport";
 
+
+const users = ref();
 export default defineComponent({
   name: "import",
   methods: {
-    importFile(event: any) {
-      const file = this.$refs.file.files[0];
-      useImport().importFile(file);
+    async importFile(event: any) {
+      const file = this.$refs.file.files?.[0];
+      this.users = await useImport().xlsxToJson(file);
+
+      await useDirectusUsers().createUsers({users:this.users});
+
     },
-    downloadExampleFile() {
-      const result = useImport().exampleFile();
-      const blob = new Blob([result], {type: 'text/csv'});
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'exemple.csv';
-      a.click();
+
+  },
+  data() {
+    return {
+      users:[]
     }
   }
 })

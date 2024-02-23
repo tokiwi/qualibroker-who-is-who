@@ -14,7 +14,7 @@ export default defineNuxtConfig({
 
   directus: {
     autoFetch: true,
-    url: 'http://0.0.0.0:8055/'
+    url: 'http://127.0.0.1:8055/'
   }
 
   /*googleFonts: {

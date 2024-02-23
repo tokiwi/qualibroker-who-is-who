@@ -151,6 +151,8 @@
 
 <script lang="ts">
 import AvailabilityList from "~/components/availability-list.vue";
+import type {DirectusUser, DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
+import dayjs from "dayjs";
 
 definePageMeta({
   middleware: ["auth"]
@@ -205,20 +207,19 @@ export default {
       loading: false,
     }
   },
-  mounted() {
-    this.fetchEmployees();
+  async mounted() {
+    await this.fetchEmployees();
   },
   methods: {
     async fetchEmployees() {
       this.loading = true;
-      const {getItems} = useDirectusItems();
+      const {getUsers} = useDirectusUsers();
       try {
-        this.peoples = await getItems({
-          collection: "Employees",
+        this.peoples = await getUsers({
           params: {
             fields: "*, departement.*, referrer.*, batiment.*"
           }
-        });
+        } as DirectusUserRequest);
       } catch (e) {
         console.error(e);
       } finally {
