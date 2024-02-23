@@ -14,7 +14,10 @@
     <UTable :rows="filteredPeoples" :columns="columns" :pending="loading" class="text-brand-text">
       <template #avatar-data="{ row }">
         <div class="w-11 h-11 mx-auto">
-          <img :src="img(row.image, { width: 60, format: 'jpg' })" alt="" class="aspect-square rounded-full">
+          <template v-if="row.image">
+            <img :src="img(row.image, { width: 60, format: 'jpg' })" alt=""
+                 class="aspect-square rounded-full h-full w-full">
+          </template>
         </div>
       </template>
       <template #name-data="{ row }">
@@ -58,7 +61,8 @@
         <template #header>
           <div class="flex gap-4">
             <div class="w-14 h-14 shrink-0">
-              <img :src="img(getSelectedPerson.image, { width: 100, format: 'jpg' })" alt="" class="aspect-square rounded-full">
+              <img :src="img(getSelectedPerson.image, { width: 100, format: 'jpg' })" alt=""
+                   class="aspect-square rounded-full">
             </div>
             <div>
               <div class="text-xl">

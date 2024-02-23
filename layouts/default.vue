@@ -40,7 +40,8 @@ export default {
     this.fetchNavigations();
   },
   watch: {
-    'route.path'() {
+    // watch for route change
+    $route() {
       this.fetchNavigations();
     }
   },
