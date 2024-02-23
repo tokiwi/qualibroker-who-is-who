@@ -14,16 +14,16 @@
     <UTable :rows="filteredPeoples" :columns="columns" :pending="loading" class="text-brand-text">
       <template #avatar-data="{ row }">
         <div class="w-11 h-11 mx-auto">
-          <template v-if="row.image">
-            <img :src="img(row.image, { width: 60, format: 'jpg' })" alt=""
+          <template v-if="row.avatar">
+            <img :src="img(row.avatar, { width: 60, format: 'jpg' })" alt=""
                  class="aspect-square rounded-full h-full w-full">
           </template>
         </div>
       </template>
-      <template #name-data="{ row }">
+      <template #readableName-data="{ row }">
         <div class="flex flex-col w-[150px]">
           <div class="font-medium overflow-hidden whitespace-nowrap overflow-ellipsis">
-            {{ row.name }}
+            {{ row.readableName }}
           </div>
           <div class="font-light overflow-hidden whitespace-nowrap overflow-ellipsis ">
             {{ row.title }}
@@ -31,13 +31,28 @@
         </div>
       </template>
       <template #departement-data="{row}">
-        {{ row.departement }}
+        <template v-if="row.department">
+          {{ row.department }}
+        </template>
+        <template v-else>
+          -
+        </template>
       </template>
       <template #email-data="{ row }">
-        <a :href="`mailto:${row.email}`">{{ row.email }}</a>
+        <template v-if="row.email">
+          <a :href="`mailto:${row.email}`">{{ row.email }}</a>
+        </template>
+        <template v-else>
+          -
+        </template>
       </template>
       <template #phone-data="{row}">
-        <a :href="`tel:${row.phone}`">{{ row.phone }}</a>
+        <template v-if="row.phone">
+          <a :href="`tel:${row.phone}`">{{ row.phone }}</a>
+        </template>
+        <template v-else>
+          -
+        </template>
       </template>
       <template #schedules-data="{row}">
         {{ formatScheduleToHuman(row.schedule_start) }} - {{ formatScheduleToHuman(row.schedule_end) }}
@@ -61,12 +76,12 @@
         <template #header>
           <div class="flex gap-4">
             <div class="w-14 h-14 shrink-0">
-              <img :src="img(getSelectedPerson.image, { width: 100, format: 'jpg' })" alt=""
+              <img :src="img(getSelectedPerson.avatar, { width: 100, format: 'jpg' })" alt=""
                    class="aspect-square rounded-full">
             </div>
             <div>
               <div class="text-xl">
-                {{ getSelectedPerson?.name || '-' }}
+                {{ getSelectedPerson?.readableName || '-' }}
               </div>
               <div>
                 {{ getSelectedPerson?.title || '-' }}
@@ -108,7 +123,7 @@
               Departement
             </div>
             <div class="font-medium">
-              {{ getSelectedPerson?.departement || '-' }}
+              {{ getSelectedPerson?.department || '-' }}
             </div>
           </div>
           <div class="flex flex-col">
@@ -124,10 +139,10 @@
               Référent
             </div>
             <div class="font-medium">
-              <template v-if="getSelectedPerson.referrer && getSelectedPerson.referrer.name">
+              <template v-if="getSelectedPerson.referrer && getSelectedPerson.referrer.first_name">
                 <div class="text-qualibroker-600 cursor-pointer"
                      @click="selectedPerson = getSelectedPerson.referrer.id">
-                  {{ getSelectedPerson.referrer.name }}
+                  {{ getSelectedPerson.referrer.first_name }} {{ getSelectedPerson.referrer.last_name }}
                 </div>
               </template>
               <template v-else>
@@ -150,15 +165,10 @@
 </template>
 
 <script lang="ts">
-import AvailabilityList from "~/components/availability-list.vue";
-import type {DirectusUser, DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
-import dayjs from "dayjs";
+import type { DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
 
-definePageMeta({
-  middleware: ["auth"]
-})
 export default {
-  components: {AvailabilityList},
+  middleware: ['auth'],
   layout: 'default',
   data() {
     return {
@@ -169,7 +179,7 @@ export default {
           label: '',
         },
         {
-          key: 'name',
+          key: 'readableName',
           label: 'Nom',
           sortable: true,
         },
@@ -217,7 +227,7 @@ export default {
       try {
         this.peoples = await getUsers({
           params: {
-            fields: "*, departement.*, referrer.*, batiment.*"
+            fields: "*, department.*, referrer.*, batiment.*"
           }
         } as DirectusUserRequest);
       } catch (e) {
@@ -242,8 +252,11 @@ export default {
     },
     formatedPeoples() {
       return this.peoples.map(person => {
-        if (typeof person.departement === 'object') {
-          person.departement = person.departement.name;
+        if (person.department && typeof person.department === 'object') {
+          person.department = person.department.name;
+        }
+        if (person.first_name || person.last_name) {
+          person.readableName = `${person.first_name} ${person.last_name}`;
         }
         return person;
       })

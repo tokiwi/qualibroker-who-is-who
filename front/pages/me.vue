@@ -169,6 +169,10 @@ export default defineComponent({
     {
       this.state.availability = [];
     }
+    if(this.state.competences == null)
+    {
+      this.state.competences = [];
+    }
   },
   methods: {
     img(params) {
