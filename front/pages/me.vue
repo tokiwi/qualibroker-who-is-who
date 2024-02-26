@@ -7,7 +7,7 @@
       </div>
       <div class="grid grid-cols-1 xl:grid-cols-12 gap-11 items-start">
         <div class="xl:col-span-8 p-6 bg-white rounded-xl">
-          <UForm @submit="update" @keydown.enter.prevent :state="state" class="grid grid-cols-2 gap-6">
+          <UForm @submit="update" @keydown.enter.prevent :state="state" class="grid grid-col-1 md:grid-cols-2 gap-6">
             <div class="flex flex-col gap-6">
               <div class="font-bold text-xl">
                 Informations
@@ -61,7 +61,6 @@
                 </template>
               </div>
             </div>
-
             <div class="flex flex-col gap-6">
               <div class="font-bold text-xl">
                 Disponibilités
@@ -88,7 +87,7 @@
               </div>
               <CompetencesList v-model="state.competences"></CompetencesList>
             </div>
-            <div class="col-span-2 flex gap-2 justify-end">
+            <div class="col-span-1 md:col-span-2 flex gap-2 justify-end">
               <UButton size="lg" type="submit" class="text-center">Sauvegarder</UButton>
             </div>
           </UForm>
