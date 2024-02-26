@@ -77,7 +77,7 @@
           <div class="flex gap-4">
             <div class="w-14 h-14 shrink-0">
               <img :src="img(getSelectedPerson.avatar, { width: 100, format: 'jpg' })" alt=""
-                   class="aspect-square rounded-full">
+                   class="w-14 h-14 rounded-full">
             </div>
             <div>
               <div class="text-xl">
@@ -87,9 +87,10 @@
                 {{ getSelectedPerson?.title || '-' }}
               </div>
             </div>
+            <UIcon name="i-heroicons-x-mark" @click="openModal = false" class="ml-auto text-xl cursor-pointer p-2"/>
           </div>
         </template>
-        <div class="grid grid-cols-2 gap-y-6 gap-x-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4">
           <div class="flex flex-col">
             <div class="font-light text-sm">
               Email
@@ -150,7 +151,7 @@
               </template>
             </div>
           </div>
-          <div class="col-span-2">
+          <div class="col-span-1 md:col-span-2">
             <div class="font-light text-sm">
               Compétences
             </div>
@@ -165,7 +166,7 @@
 </template>
 
 <script lang="ts">
-import type { DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
+import type {DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
 import {definePageMeta} from "#imports";
 
 definePageMeta({
