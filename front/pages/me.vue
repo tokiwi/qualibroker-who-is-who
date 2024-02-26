@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-5 pt-10">
+    <Navigation></Navigation>
     <div class="flex flex-col gap-4">
       <div class="text-3xl font-bold">
         Mon Profil
@@ -12,10 +13,10 @@
                 Informations
               </div>
               <div class="flex flex-col gap-3">
-                <UFormGroup label="Nom" name="last_name">
+                <UFormGroup label="Nom de famille" name="last_name">
                   <UInput v-model="state.last_name"/>
                 </UFormGroup>
-                <UFormGroup label="Nom" name="first_name">
+                <UFormGroup label="Prénom" name="first_name">
                   <UInput v-model="state.first_name"/>
                 </UFormGroup>
                 <UFormGroup label="Titre" name="title">
@@ -88,7 +89,6 @@
               <CompetencesList v-model="state.competences"></CompetencesList>
             </div>
             <div class="col-span-2 flex gap-2 justify-end">
-              <UButton size="lg" @click="resetForm" color="black" class="text-center">Annuler</UButton>
               <UButton size="lg" type="submit" class="text-center">Sauvegarder</UButton>
             </div>
           </UForm>
@@ -103,7 +103,7 @@
           </div>
           <div class="p-6">
             <div class="flex items-center justify-center">
-              <input type="file" class="hidden" ref="input-file" @change="handleUploadFile" />
+              <input type="file" class="hidden" ref="input-file" @change="handleUploadFile"/>
               <UButton size="lg" variant="ghost" color="gray" @click="updatePhoto">Changer ma photo de profil</UButton>
             </div>
           </div>
@@ -169,12 +169,10 @@ export default defineComponent({
     this.fetchDepartements();
     this.fetchReferrers();
 
-    if(this.state.availability == null)
-    {
+    if (this.state.availability == null) {
       this.state.availability = [];
     }
-    if(this.state.competences == null)
-    {
+    if (this.state.competences == null) {
       this.state.competences = [];
     }
   },
@@ -204,7 +202,7 @@ export default defineComponent({
           }
         });
 
-        this.referrers = this.referrers.map(r=>({
+        this.referrers = this.referrers.map(r => ({
           ...r,
           name: `${r.first_name} ${r.last_name}`
         }))
@@ -226,35 +224,37 @@ export default defineComponent({
       }
     },
     async update() {
-      const {updateItem} = useDirectusItems();
-      // try {
+      const {updateUser} = useDirectusUsers();
+      let user = this.state;
 
-        let user = this.state;
+      // we allow edit of first_name, last_name, email, avatar, location, title, phone, availability, schedule_start, schedule_end, competences, department, referrer, batiment, for all other field, delete them
+      user = {
+        first_name: this.state.first_name,
+        last_name: this.state.last_name,
+        email: this.state.email,
+        avatar: this.state.avatar,
+        location: this.state.location,
+        title: this.state.title,
+        phone: this.state.phone,
+        availability: this.state.availability,
+        schedule_start: this.state.schedule_start,
+        schedule_end: this.state.schedule_end,
+        competences: this.state.competences,
+        department: this.state.department,
+        referrer: this.state.referrer,
+        batiment: this.state.batiment,
+      }
 
-        delete user.tfa_secret
-        delete user.password
-
-        await useDirectusUsers().updateUser({
-          id:user.id,
-          user:user
-        });
-        useToast().add({
-          id: 'valid_update',
-          title: 'Mise à jour effectuée',
-          description: 'Vos informations ont été mises à jour avec succès',
-          color: 'green'
-        })
-      // } catch (e) {
-      //   useToast().add({
-      //     id: 'error_update',
-      //     title: 'Erreur de mise à jour',
-      //     description: 'Une erreur est survenue lors de la mise à jour de vos informations',
-      //     color: 'red'
-      //   })
-      // }
-    },
-    resetForm() {
-      this.assignCurrentToState();
+      await updateUser({
+        id: this.state.id,
+        user
+      });
+      useToast().add({
+        id: 'valid_update',
+        title: 'Mise à jour effectuée',
+        description: 'Vos informations ont été mises à jour avec succès',
+        color: 'green'
+      })
     },
     updatePhoto() {
       this.$refs['input-file'].click();

@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col gap-5">
-    <div class="font-bold text-5xl">Who is who ?</div>
+  <div class="flex flex-col gap-5 pt-10">
+    <Navigation></Navigation>
     <div class="flex px-0.5">
       <UInput v-model="q"
               icon="i-heroicons-magnifying-glass-20-solid"
@@ -13,7 +13,7 @@
     </div>
     <UTable :rows="filteredPeoples" :columns="columns" :pending="loading" class="text-brand-text">
       <template #avatar-data="{ row }">
-        <div class="w-11 h-11 mx-auto">
+        <div class="w-11 h-11 mx-auto cursor-pointer" @click="selectedPerson = row.id; openModal = true;">
           <template v-if="row.avatar">
             <img :src="img(row.avatar, { width: 60, format: 'jpg' })" alt=""
                  class="aspect-square rounded-full h-full w-full">
@@ -21,7 +21,7 @@
         </div>
       </template>
       <template #readableName-data="{ row }">
-        <div class="flex flex-col w-[150px]">
+        <div class="flex flex-col w-[150px] cursor-pointer" @click="selectedPerson = row.id; openModal = true;">
           <div class="font-medium overflow-hidden whitespace-nowrap overflow-ellipsis">
             {{ row.readableName }}
           </div>
@@ -155,7 +155,6 @@
               Compétences
             </div>
             <div class="font-medium">
-              {{ getSelectedPerson?.role }}
               {{ getSelectedPerson?.competences?.join(', ') || '-' }}
             </div>
           </div>

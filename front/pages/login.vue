@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full flex items-center justify-center">
+  <div class="h-full w-full flex items-center justify-center grow">
     <UForm :schema="schema" :state="state" @submit="login" class="bg-white rounded-xl p-5 flex flex-col gap-4 min-w-[340px] min-h-[200px]">
       <UFormGroup label="Email" name="email">
         <UInput type="text" v-model="state.email" placeholder="john.doe@qualibroker.ch"/>

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>import</h1>
+  <div class="flex flex-col gap-5 pt-10">
+    <Navigation></Navigation>
     <div class="flex flex-col">
       <div class="flex gap-2">
         <input type="file" ref="file">

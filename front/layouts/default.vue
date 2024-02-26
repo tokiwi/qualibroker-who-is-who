@@ -1,71 +1,64 @@
 <template>
-  <div class="w-full h-dvh grid grid-cols-12">
-    <div class="col-span-2 md:col-span-4 xl:col-span-2 h-dvh bg-white flex flex-col gap-32 px-4 py-6 xl:px-11 xl:py-12">
-      <nuxt-link to="/">
-        <img src="~/assets/images/logo.png" alt="">
+  <div class="min-h-dvh bg-brand-gray px-4 py-6 xl:px-11 xl:py-6 flex flex-col">
+    <div class="flex justify-between">
+      <nuxt-link to="/" class="flex flex-col">
+        <div class="font-bold text-4xl">Who is who ?</div>
+        <img src="~/assets/images/logo.png" class="w-[230px]" alt="">
       </nuxt-link>
-      <nav class="flex flex-col gap-3 text-lg font-medium">
-        <template v-for="navigation in navigations" :key="navigation.title">
-          <nuxt-link :to="navigation.link" class="flex gap-2 items-center">
-            <div class="text-brand-gray text-2xl flex items-center justify-center">
-              <UIcon :name="navigation.icon" dynamic />
+      <template v-if="useDirectusUser().value">
+        <UPopover>
+          <div class="flex gap-3 items-center">
+            <template v-if="useDirectusUser().value?.avatar">
+              <img :src="img(useDirectusUser().value?.avatar, { width: 60, format: 'jpg' })" alt=""
+                   class="aspect-square rounded-full h-11 w-11">
+            </template>
+            <template v-else-if="useDirectusUser().value?.first_name && useDirectusUser().value?.last_name">
+              <div class="aspect-square rounded-full h-11 w-11 bg-qualibroker-800 flex items-center justify-center">
+                <div class="text-white">
+                  {{ useDirectusUser().value.first_name.charAt(0).toUpperCase() }}{{ useDirectusUser().value.last_name.charAt(0).toUpperCase() }}
+                </div>
+              </div>
+            </template>
+            <div class="flex flex-col">
+              <div class="text-sm text-gray-400">Profil</div>
+              <template v-if="useDirectusUser().value?.first_name && useDirectusUser().value?.last_name">
+              <div class="font-bold">
+                {{ useDirectusUser().value.first_name }} {{useDirectusUser().value.last_name }}
+              </div>
+              </template>
             </div>
             <div>
-              {{ navigation.name }}
+              <UIcon name="i-heroicons-chevron-down" class="text-black"/>
             </div>
-          </nuxt-link>
-        </template>
-      </nav>
-      <div class="mt-auto">
-        <hr class="border-black">
-        <div class="text-lg text-gray-600 text-center pt-3">
-          <a href="https://tokiwi.ch/" target="_blank">
-            Created by tokiwi
-          </a>
-        </div>
-      </div>
+          </div>
+          <template #panel>
+            <div class="p-4">
+              <UButton variant="ghost" @click="logoff">
+                Se déconnecter
+              </UButton>
+            </div>
+          </template>
+        </UPopover>
+      </template>
     </div>
-    <div class="col-span-10 md:col-span-8 xl:col-span-10 h-dvh bg-brand-gray px-4 py-6 xl:px-11 xl:py-12">
-      <div class="h-full w-full overflow-scroll">
-        <NuxtPage></NuxtPage>
-      </div>
-    </div>
-    <UNotifications />
+    <NuxtPage></NuxtPage>
+    <UNotifications/>
   </div>
 </template>
 
 <script lang="ts">
 export default {
-  mounted() {
-    this.fetchNavigations();
-  },
-  watch: {
-    // watch for route change
-    $route() {
-      this.fetchNavigations();
-    }
-  },
-  data() {
-    return {
-      navigations: [],
-    }
-  },
+  name: 'default',
   methods: {
-    async fetchNavigations() {
-      const {getItems} = useDirectusItems();
-      try {
-        this.navigations = await getItems({
-          collection: "navigations",
-          params: {
-            fields: "*"
-          }
-        });
-      } catch (e) {
-        console.error(e);
-      } finally {
-      }
+    img(params) {
+      const {getThumbnail} = useDirectusFiles();
+      return getThumbnail(params);
     },
-  },
+    async logoff() {
+      await useDirectusAuth().logout();
+      this.$router.push('/login');
+    }
+  }
 }
 </script>
 
