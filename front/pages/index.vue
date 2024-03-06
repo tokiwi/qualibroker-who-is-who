@@ -247,7 +247,14 @@ export default {
       try {
         this.peoples = await getUsers({
           params: {
-            fields: "*, department.*, referrer.*, batiment.*"
+            fields: "*, department.*, referrer.*, batiment.*",
+            filter: {
+              role: {
+                name: {
+                  _eq: 'User'
+                }
+              }
+            }
           }
         } as DirectusUserRequest);
       } catch (e) {

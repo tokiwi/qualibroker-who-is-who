@@ -1,6 +1,17 @@
 version: "3.9"
 
 services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_USER: user
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: whoiswho
+    volumes:
+      - ./database/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
 #  frontend:
 #    image: node:20-alpine
 #    working_dir: /webapp
@@ -43,24 +54,24 @@ services:
 #    extra_hosts:
 #      - "keycloak.who-is-who.qualibroker.localhost:192.168.0.3"
 
-  keycloak:
-    image: quay.io/keycloak/keycloak
-    ports:
-      - "8080:8080"
-    env_file:
-      - ./keycloak/.env
-    command:
-      - start-dev
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.keycloak.rule=Host(`keycloak.who-is-who.qualibroker.localhost`)"  # Replace with your desired domain
-#      - "traefik.http.routers.keycloak.entrypoints=web"
-    volumes:
-      - ./keycloak/data/:/opt/keycloak/data/h2/:rw
-#    depends_on:
-#      - traefik
-    networks:
-      - default
+#  keycloak:
+#    image: quay.io/keycloak/keycloak
+#    ports:
+#      - "8080:8080"
+#    env_file:
+#      - ./keycloak/.env
+#    command:
+#      - start-dev
+##    labels:
+##      - "traefik.enable=true"
+##      - "traefik.http.routers.keycloak.rule=Host(`keycloak.who-is-who.qualibroker.localhost`)"  # Replace with your desired domain
+##      - "traefik.http.routers.keycloak.entrypoints=web"
+#    volumes:
+#      - ./keycloak/data/:/opt/keycloak/data/h2/:rw
+##    depends_on:
+##      - traefik
+#    networks:
+#      - default
 
 #  traefik:
 #    image: "traefik:v2.11"

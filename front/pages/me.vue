@@ -39,8 +39,8 @@
                   </UFormGroup>
                 </template>
                 <template v-if="departements">
-                  <UFormGroup label="Département" name="department">
-                    <USelectMenu v-model="state.department"
+                  <UFormGroup label="Département" name="departement">
+                    <USelectMenu v-model="state.departement"
                                  searchable
                                  searchable-placeholder="Rechercher un département"
                                  value-attribute="id"
@@ -212,6 +212,16 @@ export default defineComponent({
         this.referrers = await useDirectusUsers().getUsers({
           params: {
             fields: ["*"],
+            filter: {
+              role: {
+                name: {
+                  _eq: 'User'
+                }
+              },
+              id: {
+                _neq: this.state.id
+              }
+            }
           }
         });
 
@@ -240,11 +250,10 @@ export default defineComponent({
       const {updateUser} = useDirectusUsers();
       let user = this.state;
 
-      // we allow edit of first_name, last_name, email, avatar, location, title, phone, availability, schedule_start, schedule_end, competences, department, referrer, batiment, for all other field, delete them
+      // we allow edit of first_name, last_name, email, avatar, location, title, phone, availability, schedule_start, schedule_end, competences, departement, referrer, batiment, for all other field, delete them
       user = {
         first_name: this.state.first_name,
         last_name: this.state.last_name,
-        email: this.state.email,
         avatar: this.state.avatar,
         location: this.state.location,
         title: this.state.title,
@@ -253,7 +262,7 @@ export default defineComponent({
         schedule_start: this.state.schedule_start,
         schedule_end: this.state.schedule_end,
         competences: this.state.competences,
-        department: this.state.department,
+        departement: this.state.departement,
         referrer: this.state.referrer,
         batiment: this.state.batiment,
       }
