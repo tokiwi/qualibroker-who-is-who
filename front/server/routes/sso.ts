@@ -24,8 +24,6 @@ export default defineEventHandler(async (event) => {
       return await sendRedirect(event, '/login', 200)
     }
 
-    console.log(data.data);
-
     directus_refresh_token = data.data.refresh_token
     const directus_token = data.data.access_token
     const directus_token_expired_at = data.data.expires
