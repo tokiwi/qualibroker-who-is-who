@@ -5,6 +5,7 @@
         <div class="font-bold text-xl lg:text-4xl whitespace-nowrap">Who is who ?</div>
         <img src="~/assets/images/logo.png" class="w-[140px] lg-w-[230px]" alt="">
       </nuxt-link>
+      <client-only>
       <template v-if="useDirectusUser().value">
         <UPopover>
           <div class="flex gap-1 md:gap-3 items-center">
@@ -40,6 +41,7 @@
           </template>
         </UPopover>
       </template>
+      </client-only>
     </div>
     <NuxtPage></NuxtPage>
     <UNotifications/>

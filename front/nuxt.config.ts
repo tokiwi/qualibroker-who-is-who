@@ -1,9 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: {enabled: true},
   modules: [
     '@nuxt/ui',
     'dayjs-nuxt',
+    /*'nuxt-directus-next',*/
     'nuxt-directus',
     /*'@nuxtjs/google-fonts'*/
   ],
@@ -13,11 +14,20 @@ export default defineNuxtConfig({
   },
 
   directus: {
-    autoFetch: true,
+    //autoFetch: true,
+    autoRefresh: true,
     url: process.env.DIRECTUS_URL,
   },
 
-  ssr: false,
+  runtimeConfig: {
+    public: {
+      directus: {
+        url: process.env.DIRECTUS_URL,
+      }
+    }
+  },
+
+  ssr: true,
 
   /*googleFonts: {
     families: {

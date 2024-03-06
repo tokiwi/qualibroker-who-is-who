@@ -1,0 +1,87 @@
+version: "3.9"
+
+services:
+#  frontend:
+#    image: node:20-alpine
+#    working_dir: /webapp
+#    command: [sh, -c, "npm i && npm run dev"]
+#    env_file:
+#      - ./front/.env
+#    ports:
+#      - "3000:3000"  # Expose Nuxt development server port (adjust for production)
+#    volumes:
+#      - ./front:/webapp:rw  # Mount your project directory
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.frontend.rule=Host(`who-is-who.qualibroker.localhost`)"  # Replace with your desired domain
+#      - "traefik.http.routers.frontend.entrypoints=web"
+#    depends_on:
+#      - traefik
+#      - backend
+#    networks:
+#      - default
+
+#  backend:
+#    image: directus/directus:latest
+#    env_file:
+#      - ./back/.env
+#    ports:
+#      - "8055:8055"
+#    volumes:
+#      - ./back/database:/directus/database:rw
+#      - ./back/uploads:/directus/uploads:rw
+#      - ./back/extensions:/directus/extensions:rw
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.backend.rule=Host(`back.who-is-who.qualibroker.localhost`)"  # Replace with your desired domain
+#      - "traefik.http.routers.backend.entrypoints=web"
+#    depends_on:
+#      - traefik
+#      - keycloak
+#    networks:
+#    - default
+#    extra_hosts:
+#      - "keycloak.who-is-who.qualibroker.localhost:192.168.0.3"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./keycloak/.env
+    command:
+      - start-dev
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.keycloak.rule=Host(`keycloak.who-is-who.qualibroker.localhost`)"  # Replace with your desired domain
+#      - "traefik.http.routers.keycloak.entrypoints=web"
+    volumes:
+      - ./keycloak/data/:/opt/keycloak/data/h2/:rw
+#    depends_on:
+#      - traefik
+    networks:
+      - default
+
+#  traefik:
+#    image: "traefik:v2.11"
+#    container_name: "traefik"
+#    command:
+#      #- "--log.level=DEBUG"
+#      - "--api.insecure=true"
+#      - "--providers.docker=true"
+#      - "--providers.docker.exposedbydefault=false"
+#      - "--entrypoints.web.address=:80"
+#    ports:
+#      - "80:80"
+#      - "8080:8080"
+#    volumes:
+#      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+#    networks:
+#      - default
+
+#  # Mailcatcher for development mail testing
+#  mailcatcher:
+#    image: mailcatcher/mailcatcher:latest
+#    restart: unless-stopped
+#    ports:
+#      - "1025:1025"  # Expose mailcatcher port

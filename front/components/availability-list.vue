@@ -1,6 +1,6 @@
 <template>
-  <div class="flex gap-1">
-    <template v-for="day in days" v-if="availabilities">
+  <div class="flex gap-1" v-if="availabilities && availabilities.length > 0">
+    <template v-for="day in days">
       <div class="flex flex-col items-center w-4">
         <div class="text-gray-400">
           {{ day.label }}

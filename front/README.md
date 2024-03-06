@@ -73,3 +73,17 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+
+```mermaid
+sequenceDiagram
+    participant Client Nuxt
+    participant Server Nuxt
+    participant Directus
+    participant Google 
+    Client Nuxt->>Directus: Request Auth
+    Directus->>Google: Auth
+    Google->>Directus: Validate Auth
+    Directus->>Server Nuxt: Request refresh (with httpOnly cookie)
+    Server Nuxt->>Client Nuxt: Redirect
+```

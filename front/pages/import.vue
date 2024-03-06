@@ -13,15 +13,30 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue'
-import {useImport} from "~/composables/useImport";
-import {definePageMeta} from "#imports";
+<script lang="ts" setup>
 
+import {definePageMeta} from "#imports";
 
 definePageMeta({
   middleware: ['auth'],
 });
+
+useHead({
+  title: 'Importation de données',
+  meta: [
+    {
+      hid: 'description',
+      name: 'description',
+      content: 'Importation'
+    }
+  ]
+});
+
+</script>
+
+<script lang="ts">
+import {defineComponent} from 'vue'
+import {useImport} from "~/composables/useImport";
 
 const users = ref();
 export default defineComponent({

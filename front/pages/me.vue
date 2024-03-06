@@ -112,14 +112,28 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue'
-import {definePageMeta, useDirectusUsers} from "#imports";
-import type {DirectusUser, DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
+<script lang="ts" setup>
+import {definePageMeta} from "#imports";
+
+useHead({
+  title: 'Mon Profil',
+  meta: [
+    {
+      hid: 'description',
+      name: 'description',
+      content: 'Mon Profil'
+    }
+  ]
+});
 
 definePageMeta({
   middleware: ['auth'],
 });
+</script>
+
+<script lang="ts">
+import {defineComponent} from 'vue'
+import {useDirectusUsers} from "#imports";
 
 export default defineComponent({
   name: "me",

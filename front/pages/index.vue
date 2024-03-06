@@ -58,7 +58,7 @@
         {{ formatScheduleToHuman(row.schedule_start) }} - {{ formatScheduleToHuman(row.schedule_end) }}
       </template>
       <template #disponibility-data="{row}">
-        <AvailabilityList :availabilities="row.availability"></AvailabilityList>
+        <AvailabilityList :availabilities="row.availability || []"></AvailabilityList>
       </template>
       <template #action-data="{row}">
         <div class="flex gap-2" @click="selectedPerson = row.id; openModal = true;">
@@ -165,13 +165,28 @@
   </div>
 </template>
 
-<script lang="ts">
-import type {DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
+<script lang="ts" setup>
 import {definePageMeta} from "#imports";
 
+useHead({
+  title: 'Annuaire',
+  meta: [
+    {
+      hid: 'description',
+      name: 'description',
+      content: 'Annuaire des collaborateurs'
+    }
+  ]
+});
 definePageMeta({
   middleware: ['auth'],
 });
+
+</script>
+
+<script lang="ts">
+import type {DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
+import {definePageMeta} from "#imports";
 
 export default {
   layout: 'default',
