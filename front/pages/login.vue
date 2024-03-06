@@ -12,7 +12,7 @@
         <UButton type="submit" class="text-center">Se connecter</UButton>
         <UButton @click="forget" color="gray">Mot de passe oublié ?</UButton>
       </div>
-      <button @click="loginWithGoogle" class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
+      <button @click="loginWithMicrosoft" class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
           <span class="flex items-center justify-center p-3 bg-gray-200 rounded-sm group-hover:bg-gray-300 transition-all duration-200">
             <Icon name="i-simple-icons-microsoft" class="text-[30px]"></Icon>
           </span>
@@ -76,10 +76,10 @@ export default {
         })
       }
     },
-    async loginWithGoogle() {
+    async loginWithMicrosoft() {
       const {loginWithProvider} = useDirectusAuth()
       try {
-        const result = await loginWithProvider('google', '/sso');
+        const result = await loginWithProvider('microsoft', '/sso');
       } catch (e) {
         useToast().add({
           id: 'error_login',
