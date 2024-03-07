@@ -51,11 +51,11 @@
 <script lang="ts">
 export default {
   name: 'default',
+  setup() {
+    const { getThumbnail: img } = useDirectusFiles();
+    return { img }
+  },
   methods: {
-    img(params) {
-      const {getThumbnail} = useDirectusFiles();
-      return getThumbnail(params);
-    },
     async logoff() {
       await useDirectusAuth().logout();
       this.$router.push('/login');

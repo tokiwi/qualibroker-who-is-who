@@ -1,11 +1,9 @@
 export default defineEventHandler(async (event) => {
   let directus_refresh_token = getCookie(event, 'directus_refresh_token');
-  console.log(directus_refresh_token);
 
   if (!directus_refresh_token) {
     return await sendRedirect(event, '/login', 200)
   }
-
 
   try {
     const config = useRuntimeConfig(event)
@@ -15,7 +13,7 @@ export default defineEventHandler(async (event) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        credentials: 'include',
+        credentials: 'include'
       },
       body: JSON.stringify({
         refresh_token: directus_refresh_token
@@ -23,8 +21,6 @@ export default defineEventHandler(async (event) => {
     })
 
     const data = await result.json()
-
-    console.log(data)
     if (data.error) {
       return await sendRedirect(event, '/login', 200)
     }

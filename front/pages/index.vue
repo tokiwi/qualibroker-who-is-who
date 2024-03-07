@@ -240,6 +240,10 @@ export default {
   async mounted() {
     await this.fetchEmployees();
   },
+  async setup() {
+    const { getThumbnail: img } = useDirectusFiles();
+    return { img }
+  },
   methods: {
     async fetchEmployees() {
       this.loading = true;
