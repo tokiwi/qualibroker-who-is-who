@@ -31,8 +31,8 @@
         </div>
       </template>
       <template #departement-data="{row}">
-        <template v-if="row.department">
-          {{ row.department }}
+        <template v-if="row.departement">
+          {{ row.departement }}
         </template>
         <template v-else>
           -
@@ -159,7 +159,7 @@ export default {
       try {
         this.peoples = await getUsers({
           params: {
-            fields: "*, department.*, referrer.*, batiment.*",
+            fields: "*, departement.*, referrer.*, batiment.*",
             filter: {
               role: {
                 name: {
@@ -184,8 +184,8 @@ export default {
   computed: {
     formatedPeoples() {
       return this.peoples.map(person => {
-        if (person.department && typeof person.department === 'object') {
-          person.department = person.department.name;
+        if (person.departement && typeof person.departement === 'object') {
+          person.departement = person.departement.name;
         }
         if (person.first_name || person.last_name) {
           person.readableName = `${person.first_name} ${person.last_name}`;

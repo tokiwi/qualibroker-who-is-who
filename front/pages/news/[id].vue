@@ -22,10 +22,10 @@
                   </div>
                 </div>
               </template>
-              <template v-if="news.author && news.users">
+              <template v-if="news.author && news.users && news.users.length > 0">
                 <hr class="border-t border-gray-400 w-[50%]">
               </template>
-              <template v-if="news.users">
+              <template v-if="news.users && news.users.length > 0">
                 <div>
                   <div class="text-xl mb-2">
                     Mentionné

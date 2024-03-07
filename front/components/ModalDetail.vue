@@ -52,7 +52,7 @@
             Departement
           </div>
           <div class="font-medium">
-            {{ selectedPerson?.department || '-' }}
+            {{ selectedPerson?.departement?.name || '-' }}
           </div>
         </div>
         <div class="flex flex-col">
@@ -148,7 +148,10 @@ export default defineComponent({
       if (!this.person) return;
       const {getUserById} = useDirectusUsers();
       const person = await getUserById({
-        id: this.person
+        id: this.person,
+        params: {
+          fields: ['*', 'referrer.*', 'batiment.*', 'departement.*']
+        }
       });
       this.selectedPerson = person;
     },

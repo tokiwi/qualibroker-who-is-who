@@ -69,10 +69,10 @@
                 <div class="flex flex-wrap gap-3">
 
 
-                  <template v-for="day in days">
+                  <template v-for="day in days" :key="day.label">
                     <div>
                       <UCheckbox color="green" :ui="{'inner': 'ms-1 flex flex-col'}" v-model="state.availability"
-                                 :value="day.key" :label="day.label"/>
+                                 :value="day.key" :label="day.label" :name="day.label" :id="day.label"/>
                     </div>
                   </template>
                 </div>
