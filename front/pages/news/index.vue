@@ -50,7 +50,7 @@ export default defineComponent({
         this.news = await getItems({
           collection: "News",
           params: {
-            fields: ["title", "header", "description", "id"],
+            fields: ["title", "header", "description", "id", "category.*", "date"],
           }
         });
       } catch (error) {

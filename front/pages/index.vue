@@ -71,121 +71,13 @@
         </div>
       </template>
     </UTable>
-    <UModal v-model="openModal">
-      <UCard>
-        <template #header>
-          <div class="flex gap-4">
-            <div class="w-14 h-14 shrink-0">
-              <img :src="img(getSelectedPerson.avatar, { width: 100, format: 'jpg' })" alt=""
-                   class="w-14 h-14 rounded-full">
-            </div>
-            <div>
-              <div class="text-xl">
-                {{ getSelectedPerson?.readableName || '-' }}
-              </div>
-              <div>
-                {{ getSelectedPerson?.title || '-' }}
-              </div>
-            </div>
-            <UIcon name="i-heroicons-x-mark" @click="openModal = false" class="ml-auto text-xl cursor-pointer p-2"/>
-          </div>
-        </template>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4">
-          <div class="flex flex-col">
-            <div class="font-light text-sm">
-              Email
-            </div>
-            <div class="font-medium">
-              <a :href="`mailto:${getSelectedPerson?.email}`">{{ getSelectedPerson?.email || '-' }}</a>
-            </div>
-          </div>
-          <div class="flex flex-col">
-            <div class="font-light text-sm">
-              Téléphone
-            </div>
-            <div class="font-medium">
-              <a :href="`tel:${getSelectedPerson?.phone}`">{{ getSelectedPerson?.phone || '-' }}</a>
-            </div>
-          </div>
-          <div class="flex flex-col">
-            <AvailabilityList :availabilities="getSelectedPerson?.availability"></AvailabilityList>
-          </div>
-          <div class="flex flex-col">
-            <div class="font-light text-sm">
-              Horaires
-            </div>
-            <div class="font-medium">
-              {{ formatScheduleToHuman(getSelectedPerson?.schedule_start) }} -
-              {{ formatScheduleToHuman(getSelectedPerson?.schedule_end) }}
-            </div>
-          </div>
-          <div class="flex flex-col">
-            <div class="font-light text-sm">
-              Departement
-            </div>
-            <div class="font-medium">
-              {{ getSelectedPerson?.department || '-' }}
-            </div>
-          </div>
-          <div class="flex flex-col">
-            <div class="font-light text-sm">
-              Batiment
-            </div>
-            <div class="font-medium">
-              {{ getSelectedPerson?.batiment?.name || '-' }}
-            </div>
-          </div>
-          <div class="flex flex-col">
-            <div class="font-light text-sm">
-              Référent
-            </div>
-            <div class="font-medium">
-              <template v-if="getSelectedPerson.referrer && getSelectedPerson.referrer.first_name">
-                <div class="text-qualibroker-600 cursor-pointer"
-                     @click="selectedPerson = getSelectedPerson.referrer.id">
-                  {{ getSelectedPerson.referrer.first_name }} {{ getSelectedPerson.referrer.last_name }}
-                </div>
-              </template>
-              <template v-else>
-                -
-              </template>
-            </div>
-          </div>
-          <div class="col-span-1 md:col-span-2">
-            <div class="font-light text-sm">
-              Compétences
-            </div>
-            <div class="font-medium">
-              {{ getSelectedPerson?.competences?.join(', ') || '-' }}
-            </div>
-          </div>
-        </div>
-      </UCard>
-    </UModal>
+    <template v-if="selectedPerson">
+      <ModalDetail v-model:person="selectedPerson" />
+    </template>
   </div>
 </template>
 
-<script lang="ts" setup>
-import {definePageMeta} from "#imports";
-
-useHead({
-  title: 'Annuaire',
-  meta: [
-    {
-      hid: 'description',
-      name: 'description',
-      content: 'Annuaire des collaborateurs'
-    }
-  ]
-});
-definePageMeta({
-  middleware: ['auth'],
-});
-
-</script>
-
 <script lang="ts">
-import type {DirectusUserRequest} from "nuxt-directus/dist/runtime/types";
 import {definePageMeta} from "#imports";
 
 export default {
@@ -240,9 +132,25 @@ export default {
   async mounted() {
     await this.fetchEmployees();
   },
-  async setup() {
-    const { getThumbnail: img } = useDirectusFiles();
-    return { img }
+  setup() {
+    useHead({
+      title: 'Annuaire',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'Annuaire des collaborateurs'
+        }
+      ]
+    });
+    definePageMeta({
+      middleware: ['auth'],
+    });
+
+    const {getThumbnail: img} = useDirectusFiles();
+    return {
+      img
+    }
   },
   methods: {
     async fetchEmployees() {
@@ -267,10 +175,6 @@ export default {
         this.loading = false;
       }
     },
-    img(params) {
-      const {getThumbnail} = useDirectusFiles();
-      return getThumbnail(params);
-    },
     formatScheduleToHuman(schedule) {
       // format xx:xx:xx to xxhxx
       if (!schedule) return '';
@@ -278,9 +182,6 @@ export default {
     },
   },
   computed: {
-    getSelectedPerson() {
-      return this.peoples.find(person => person.id === this.selectedPerson);
-    },
     formatedPeoples() {
       return this.peoples.map(person => {
         if (person.department && typeof person.department === 'object') {

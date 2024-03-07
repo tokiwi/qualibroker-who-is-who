@@ -40,6 +40,11 @@ export default defineNuxtConfig({
     'nuxt-directus',
   ],
 
+  dayjs: {
+    locales: ['fr'],
+    defaultLocale: 'fr',
+  },
+
   colorMode: {
     preference: 'light'
   },

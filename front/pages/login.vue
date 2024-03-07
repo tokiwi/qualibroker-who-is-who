@@ -1,7 +1,7 @@
 <template>
   <div class="h-full w-full flex items-center justify-center grow">
     <div class="bg-white rounded-xl p-5 flex flex-col gap-4 min-w-[340px]">
-<!--      <UForm :schema="schema" :state="state" @submit="login" class="flex flex-col gap-4">
+      <UForm :schema="schema" :state="state" @submit="login" class="flex flex-col gap-4">
         <UFormGroup label="Email" name="email">
           <UInput type="text" v-model="state.email" placeholder="john.doe@qualibroker.ch"/>
         </UFormGroup>
@@ -12,8 +12,8 @@
           <UButton type="submit" class="text-center">Se connecter</UButton>
           <UButton @click="forget" color="gray">Mot de passe oublié ?</UButton>
         </div>
-      </UForm>-->
-      <a href="http://localhost:8055/auth/login/microsoft?redirect=http://localhost:3000/sso"
+      </UForm>
+<!--      <a href="http://localhost:8055/auth/login/microsoft?redirect=http://localhost:3000/sso"
               class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
           <span
               class="flex items-center justify-center p-3 bg-gray-200 rounded-sm group-hover:bg-gray-300 transition-all duration-200">
@@ -22,33 +22,10 @@
         <span class="p-3 grow text-left">
           Connexion avec Microsoft
         </span>
-      </a>
-<!--      <a href="http://localhost:8055/auth/login/google?redirect=http://localhost:3000/sso"
-              class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
-          <span
-              class="flex items-center justify-center p-3 bg-gray-200 rounded-sm group-hover:bg-gray-300 transition-all duration-200">
-            <Icon name="i-simple-icons-google" class="text-[30px]"></Icon>
-          </span>
-        <span class="p-3 grow text-left">
-          Connexion avec Google
-        </span>
       </a>-->
     </div>
   </div>
 </template>
-
-<script lang="ts" setup>
-useHead({
-  title: 'Connexion',
-  meta: [
-    {
-      hid: 'description',
-      name: 'description',
-      content: 'Connexion'
-    }
-  ]
-});
-</script>
 
 <script lang="ts">
 import {object, ref, string} from "yup";
@@ -65,6 +42,18 @@ export default {
         password: ''
       }
     }
+  },
+  setup() {
+    useHead({
+      title: 'Connexion',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'Connexion'
+        }
+      ]
+    });
   },
   methods: {
     async login() {
