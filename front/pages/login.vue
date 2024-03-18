@@ -13,7 +13,7 @@
           <UButton @click="forget" color="gray">Mot de passe oublié ?</UButton>
         </div>
       </UForm>
-      <a href="http://localhost:8055/auth/login/microsoft?redirect=http://localhost:3000/login"
+      <a href="https://admin.meet.qualibroker-swissriskcare.com/auth/login/microsoft?redirect=https://meet.qualibroker-swissriskcare.com/sso"
               class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
           <span
               class="flex items-center justify-center p-3 bg-gray-200 rounded-sm group-hover:bg-gray-300 transition-all duration-200">
