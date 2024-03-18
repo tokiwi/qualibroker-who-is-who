@@ -1,7 +1,10 @@
 export default defineEventHandler(async (event) => {
   let directus_refresh_token = getCookie(event, 'directus_refresh_token');
 
+  console.log(directus_refresh_token)
+
   if (!directus_refresh_token) {
+    console.log('No refresh token')
     return await sendRedirect(event, '/login', 200)
   }
 
@@ -9,7 +12,9 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig(event)
     const {url} = config.public.directus
 
-    const result = await fetch(`${url}/auth/refresh`, {
+    console.log(`${url}/auth/refresh`)
+
+    const result = await fetch(`${url}/auth/refresh`, { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
