@@ -65,6 +65,10 @@ export default defineNuxtConfig({
 
   ssr: true,
 
+  nitro: {
+    preset: 'node-server'
+  } 
+
   /*googleFonts: {
     families: {
       Outfit: true,

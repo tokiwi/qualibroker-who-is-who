@@ -2,7 +2,7 @@
   <div class="min-h-dvh bg-brand-gray px-4 py-6 xl:px-11 xl:py-6 flex flex-col">
     <div class="flex justify-between gap-14">
       <nuxt-link to="/" class="flex flex-col shrink">
-        <div class="font-bold text-xl lg:text-4xl whitespace-nowrap">Who is who ?</div>
+        <div class="font-bold text-xl lg:text-4xl whitespace-nowrap">Meet</div>
         <img src="~/assets/images/logo.png" class="w-[140px] lg-w-[230px]" alt="">
       </nuxt-link>
       <client-only>

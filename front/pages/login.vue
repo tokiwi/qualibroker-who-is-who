@@ -13,7 +13,7 @@
           <UButton @click="forget" color="gray">Mot de passe oublié ?</UButton>
         </div>
       </UForm>
-<!--      <a href="http://localhost:8055/auth/login/microsoft?redirect=http://localhost:3000/sso"
+      <a href="http://localhost:8055/auth/login/microsoft?redirect=http://localhost:3000/login"
               class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
           <span
               class="flex items-center justify-center p-3 bg-gray-200 rounded-sm group-hover:bg-gray-300 transition-all duration-200">
@@ -22,7 +22,7 @@
         <span class="p-3 grow text-left">
           Connexion avec Microsoft
         </span>
-      </a>-->
+      </a>
     </div>
   </div>
 </template>
@@ -68,7 +68,7 @@ export default {
         })
         setTimeout(() => {
           useRouter().push('/')
-        }, 2000);
+        }, 1000);
       } catch (e) {
         useToast().add({
           id: 'error_login',
@@ -82,7 +82,7 @@ export default {
       // redirect to forget password page
       useRouter().push('/admin/request-reset');
     }
-  }
+  },
 }
 
 </script>
