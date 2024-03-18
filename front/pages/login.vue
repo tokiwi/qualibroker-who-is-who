@@ -13,7 +13,27 @@
           <UButton @click="forget" color="gray">Mot de passe oublié ?</UButton>
         </div>
       </UForm>
-      <a href="https://admin.meet.qualibroker-swissriskcare.com/auth/login/microsoft?redirect=https://meet.qualibroker-swissriskcare.com/sso"
+      <!-- <a href="http://localhost:8055/auth/login/google?redirect=http://localhost:3000/sso"
+              class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
+          <span
+              class="flex items-center justify-center p-3 bg-gray-200 rounded-sm group-hover:bg-gray-300 transition-all duration-200">
+            <Icon name="i-simple-icons-google" class="text-[30px]"></Icon>
+          </span>
+        <span class="p-3 grow text-left">
+          Connexion avec Google
+        </span>
+      </a>
+      <a href="http://localhost:8055/auth/login/microsoft?redirect=http://localhost:3000/sso"
+              class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
+          <span
+              class="flex items-center justify-center p-3 bg-gray-200 rounded-sm group-hover:bg-gray-300 transition-all duration-200">
+            <Icon name="i-simple-icons-microsoft" class="text-[30px]"></Icon>
+          </span>
+        <span class="p-3 grow text-left">
+          Connexion avec Microsoft (local)
+        </span>
+      </a>
+      <a href="https://admin.meet.qualibroker-swissriskcare.com/auth/login/microsoft?redirect=http://localhost:3000/sso"
               class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
           <span
               class="flex items-center justify-center p-3 bg-gray-200 rounded-sm group-hover:bg-gray-300 transition-all duration-200">
@@ -22,7 +42,7 @@
         <span class="p-3 grow text-left">
           Connexion avec Microsoft
         </span>
-      </a>
+      </a> -->
     </div>
   </div>
 </template>
