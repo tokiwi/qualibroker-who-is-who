@@ -6,7 +6,7 @@
         <img src="~/assets/images/logo.png" class="w-[140px] lg-w-[230px]" alt="">
       </nuxt-link>
       <client-only>
-      <template v-if="useDirectusUser().value">
+<!--      <template v-if="useDirectusUser().value">
         <UPopover>
           <div class="flex gap-1 md:gap-3 items-center">
             <template v-if="useDirectusUser().value?.avatar">
@@ -40,7 +40,7 @@
             </div>
           </template>
         </UPopover>
-      </template>
+      </template>-->
       </client-only>
     </div>
     <NuxtPage></NuxtPage>
@@ -52,12 +52,12 @@
 export default {
   name: 'default',
   setup() {
-    const { getThumbnail: img } = useDirectusFiles();
-    return { img }
+    /*const { getThumbnail: img } = useDirectusFiles();
+    return { img }*/
   },
   methods: {
     async logoff() {
-      await useDirectusAuth().logout();
+      /*await useDirectusAuth().logout();*/
       this.$router.push('/login');
     }
   }

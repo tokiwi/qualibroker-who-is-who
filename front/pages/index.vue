@@ -22,15 +22,11 @@ useHead({
     }
   ]
 });
-
-definePageMeta({
-  middleware: ['auth'],
-});
 </script>
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {useDirectusUsers} from "#imports";
+import {readItems} from "@directus/sdk";
 
 export default defineComponent({
   name: "me",
@@ -45,7 +41,12 @@ export default defineComponent({
   },
   methods: {
     async fetchNews() {
-      const {getItems} = useDirectusItems();
+
+      let items = await useDirectus().client.request(readItems('News', ["title", "header", "description", "id", "category.*", "date"]));
+
+      console.log(items)
+
+      /*const {getItems} = useDirectusItems();
       try {
         this.news = await getItems({
           collection: "News",
@@ -55,7 +56,7 @@ export default defineComponent({
         });
       } catch (error) {
         console.log(error)
-      }
+      }*/
     },
   }
 })

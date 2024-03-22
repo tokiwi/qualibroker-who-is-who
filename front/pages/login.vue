@@ -22,8 +22,11 @@
         <span class="p-3 grow text-left">
           Connexion avec Google
         </span>
-      </a>
-      <a href="http://localhost:8055/auth/login/microsoft?redirect=http://localhost:3000/sso"
+      </a>-->
+      <button @click="refresh">
+        Refresh
+      </button>
+      <a href="http://localhost:8055/auth/login/microsoft?redirect=http://localhost:3000/login"
               class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
           <span
               class="flex items-center justify-center p-3 bg-gray-200 rounded-sm group-hover:bg-gray-300 transition-all duration-200">
@@ -33,7 +36,7 @@
           Connexion avec Microsoft (local)
         </span>
       </a>
-      <a href="https://admin.meet.qualibroker-swissriskcare.com/auth/login/microsoft?redirect=http://localhost:3000/sso"
+      <a href="https://admin.meet.qualibroker-swissriskcare.com/auth/login/microsoft?redirect=http://localhost:3000/login"
               class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
           <span
               class="flex items-center justify-center p-3 bg-gray-200 rounded-sm group-hover:bg-gray-300 transition-all duration-200">
@@ -42,13 +45,14 @@
         <span class="p-3 grow text-left">
           Connexion avec Microsoft
         </span>
-      </a> -->
+      </a>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import {object, ref, string} from "yup";
+import {useDirectus} from "#imports";
 
 export default {
   data() {
@@ -77,19 +81,23 @@ export default {
   },
   methods: {
     async login() {
-      const {login} = useDirectusAuth();
+      console.log(useDirectus())
       try {
-        await login({email: this.state.email, password: this.state.password});
+        let result = await useDirectus().client.login(this.state.email, this.state.password);
+
+        useDirectus().client.set
+
         useToast().add({
           id: 'valid_login',
           title: 'Connexion effectué',
           description: 'Vous allez maintenant être redirigé sur la page d\'accueil',
           color: 'green'
         })
-        setTimeout(() => {
+        /*setTimeout(() => {
           useRouter().push('/')
-        }, 1000);
+        }, 1000);*/
       } catch (e) {
+        console.log(e);
         useToast().add({
           id: 'error_login',
           title: 'Erreur de connexion',
@@ -101,6 +109,12 @@ export default {
     async forget() {
       // redirect to forget password page
       useRouter().push('/admin/request-reset');
+    },
+    async refresh() {
+      await fetch('http://localhost:8055/auth/refresh', {
+        method: 'POST',
+        credentials: 'include', // this is required in order to send the refresh token cookie
+      });
     }
   },
 }

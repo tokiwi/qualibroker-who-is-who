@@ -112,7 +112,7 @@ export default defineComponent({
       ]
     });
 
-    const {getThumbnail: img} = useDirectusFiles();
+    /*const {getThumbnail: img} = useDirectusFiles();*/
 
     return {
       img,

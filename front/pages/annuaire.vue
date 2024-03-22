@@ -143,14 +143,11 @@ export default {
         }
       ]
     });
-    definePageMeta({
-      middleware: ['auth'],
-    });
 
-    const {getThumbnail: img} = useDirectusFiles();
+    /*const {getThumbnail: img} = useDirectusFiles();
     return {
       img
-    }
+    }*/
   },
   methods: {
     async fetchEmployees() {

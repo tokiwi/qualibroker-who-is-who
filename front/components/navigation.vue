@@ -1,5 +1,6 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
+import {readItems} from "@directus/sdk";
 
 export default defineComponent({
   name: "navigation",
@@ -30,7 +31,8 @@ export default defineComponent({
   },
   methods: {
     async fetchNavigations() {
-      const {getItems} = useDirectusItems();
+      this.navigations = await useDirectus().client.request(readItems('navigations', ["*"]));
+      /*const {getItems} = useDirectusItems();
       try {
         this.navigations = await getItems({
           collection: "navigations",
@@ -41,7 +43,7 @@ export default defineComponent({
       } catch (e) {
         console.error(e);
       } finally {
-      }
+      }*/
     },
   },
 })

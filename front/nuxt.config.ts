@@ -37,7 +37,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/ui',
     'dayjs-nuxt',
-    'nuxt-directus',
+    '@pinia/nuxt',
   ],
 
   dayjs: {
@@ -63,11 +63,11 @@ export default defineNuxtConfig({
     }
   },
 
-  ssr: true,
+  ssr: false,
 
   nitro: {
     preset: 'node-server'
-  } 
+  }
 
   /*googleFonts: {
     families: {

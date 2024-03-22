@@ -17,10 +17,6 @@
 
 import {definePageMeta} from "#imports";
 
-definePageMeta({
-  middleware: ['auth'],
-});
-
 useHead({
   title: 'Importation de données',
   meta: [

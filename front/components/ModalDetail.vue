@@ -139,21 +139,21 @@ export default defineComponent({
       open: false as boolean,
     }
   },
-  setup() {
+  /*setup() {
     const {getThumbnail: img} = useDirectusFiles();
     return {img}
-  },
+  },*/
   methods: {
     async fetchPerson() {
       if (!this.person) return;
-      const {getUserById} = useDirectusUsers();
+      /*const {getUserById} = useDirectusUsers();
       const person = await getUserById({
         id: this.person,
         params: {
           fields: ['*', 'referrer.*', 'batiment.*', 'departement.*']
         }
-      });
-      this.selectedPerson = person;
+      });*/
+      /*this.selectedPerson = person;*/
     },
     formatScheduleToHuman(schedule) {
       // format xx:xx:xx to xxhxx

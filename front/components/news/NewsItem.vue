@@ -37,10 +37,10 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {
+  /*setup() {
     const {getThumbnail: img} = useDirectusFiles();
     return {img}
-  },
+  },*/
 })
 </script>
 

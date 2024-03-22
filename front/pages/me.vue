@@ -125,15 +125,11 @@ useHead({
     }
   ]
 });
-
-definePageMeta({
-  middleware: ['auth'],
-});
 </script>
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {useDirectusUsers} from "#imports";
+/*import {useDirectusUsers} from "#imports";*/
 
 export default defineComponent({
   name: "me",
@@ -170,7 +166,7 @@ export default defineComponent({
           key: 'sunday'
         }
       ],
-      state: useDirectusUser(),
+      state: {}/*useDirectusUser()*/,
       batiments: [],
       departements: [],
       referrers: [],
@@ -191,11 +187,11 @@ export default defineComponent({
   },
   methods: {
     img(params) {
-      const {getThumbnail} = useDirectusFiles();
-      return getThumbnail(params);
+      /*const {getThumbnail} = useDirectusFiles();*/
+      /*return getThumbnail(params);*/
     },
     async fetchBatiments() {
-      const {getItems} = useDirectusItems();
+      /*const {getItems} = useDirectusItems();
       try {
         this.batiments = await getItems({
           collection: "Batiments",
@@ -205,10 +201,10 @@ export default defineComponent({
         });
       } catch (error) {
         console.log(error)
-      }
+      }*/
     },
     async fetchReferrers() {
-      try {
+      /*try {
         this.referrers = await useDirectusUsers().getUsers({
           params: {
             fields: ["*"],
@@ -231,10 +227,10 @@ export default defineComponent({
         }))
       } catch (error) {
         console.log(error)
-      }
+      }*/
     },
     async fetchDepartements() {
-      const {getItems} = useDirectusItems();
+      /*const {getItems} = useDirectusItems();
       try {
         this.departements = await getItems({
           collection: "Departements",
@@ -244,10 +240,10 @@ export default defineComponent({
         });
       } catch (error) {
         console.log(error)
-      }
+      }*/
     },
     async update() {
-      const {updateUser} = useDirectusUsers();
+      /*const {updateUser} = useDirectusUsers();
       let user = this.state;
 
       // we allow edit of first_name, last_name, email, avatar, location, title, phone, availability, schedule_start, schedule_end, competences, departement, referrer, batiment, for all other field, delete them
@@ -276,13 +272,13 @@ export default defineComponent({
         title: 'Mise à jour effectuée',
         description: 'Vos informations ont été mises à jour avec succès',
         color: 'green'
-      })
+      })*/
     },
     updatePhoto() {
       this.$refs['input-file'].click();
     },
     async handleUploadFile(event) {
-      this.file = event.target.files[0];
+      /*this.file = event.target.files[0];
 
       const directus = useDirectus();
 
@@ -299,7 +295,7 @@ export default defineComponent({
       this.state.avatar = result.data.id;
       await this.update();
 
-      await this.fetchCurrentUser();
+      await this.fetchCurrentUser();*/
     }
   }
 })

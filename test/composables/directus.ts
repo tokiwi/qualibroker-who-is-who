@@ -7,7 +7,7 @@ let language = 'fr-FR'
 export const useDirectus = () => {
 
   const init = () => {
-    client = createDirectus(useRuntimeConfig().public.directus.url).with(authentication('cookie', {credentials: 'include'})).with(rest({credentials: 'include'}));
+    client = createDirectus(useRuntimeConfig().public.directusUrl).with(authentication('cookie', {credentials: 'include'})).with(rest({credentials: 'include'}));
   }
 
   const getUser = async () => {
