@@ -3,53 +3,23 @@ import {useAuth} from "~/stores/useAuth";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
 
-  if(!useDirectus().client)
-  {
-    console.log('init')
+  if (!useDirectus().client) {
     useDirectus().init()
   }
 
-  if(!useDirectus().translations)
-  {
-    useDirectus().getTranslations()
-  }
-
-  if(!useAuth().user)
-  {
-    try{
+  if (!useAuth().user) {
+    try {
       await useDirectus().client.refresh();
       await useDirectus().getUser();
-    }catch (e){
-    }
-  }
-
-  if(useAuth().user)
-  {
-    let redirect = localStorage.getItem('redirect')
-
-    if(redirect)
-    {
-      localStorage.removeItem('redirect')
-      return navigateTo(redirect)
-    }
-  }
-
-
-  if(to.path == '/login'){
-    if(useAuth().user){
-      switch (useAuth().user.role.name){
-        case 'Administrator':
-          return navigateTo('/admin/arvr/stats')
-        case 'Commune':
-          return navigateTo('/admin/folders')
+    } catch (e) {
+      // redirect to login
+      if (to.path !== '/login') {
+        return navigateTo('/login')
       }
     }
   }
 
-  if(to.path.indexOf('/admin') >= 0 && !useAuth().user)
-  {
-    localStorage.setItem('redirect', to.path)
-    return navigateTo('/login')
+  if (useAuth().user && to.path === '/login') {
+    return navigateTo('/')
   }
-
 })
