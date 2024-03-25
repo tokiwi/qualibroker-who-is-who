@@ -20,6 +20,8 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
+import {readUser} from "@directus/sdk";
+import images from "~/mixins/images";
 
 export default defineComponent({
   props: {
@@ -52,20 +54,13 @@ export default defineComponent({
   methods: {
     async fetchPerson() {
       if (!this.personId) return;
-      const {getUserById} = useDirectusUsers();
-      const person = await getUserById({
-        id: this.personId,
-      });
-      this.person = person;
+
+      this.person = await useDirectus().client.request(readUser(this.personId));
     },
   },
-  setup() {
-    const {getThumbnail: img} = useDirectusFiles();
-
-    return {
-      img,
-    }
-  }
+  mixins: [
+      images,
+  ]
 })
 </script>
 

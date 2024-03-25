@@ -68,6 +68,7 @@
 import {defineComponent} from 'vue'
 import NewsPerson from "~/components/news/NewsPerson.vue";
 import images from "~/mixins/images";
+import {readItem} from "@directus/sdk";
 
 export default defineComponent({
   name: "[id].vue",
@@ -83,26 +84,19 @@ export default defineComponent({
   },
   async mounted() {
     const route = useRoute()
-    const {getItemById} = useDirectusItems();
 
-    const news = await getItemById({
-      collection: "News",
-      id: route.params.id,
-      params: {
-        fields: [
-          "*",
-          "category.*",
-          "author.id",
-          "author.first_name",
-          "author.last_name",
-          "author.avatar.id",
-          "author.title",
-          "users.*",
-        ],
-      }
-    })
-
-    this.news = news
+    this.news = await useDirectus().client.request(readItem('News', route.params.id, {
+      fields: [
+        "*",
+        "category.*",
+        "author.id",
+        "author.first_name",
+        "author.last_name",
+        "author.avatar.id",
+        "author.title",
+        "users.*",
+      ],
+    }))
   },
   async setup() {
     useHead({
