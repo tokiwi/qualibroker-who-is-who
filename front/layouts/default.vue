@@ -62,7 +62,9 @@ export default {
     async logoff() {
       await useDirectus().client.logout();
       useAuth().user = null;
-      useRouter().push('/login');
+
+      // refresh the page
+      this.$router.go();
     }
   },
   computed: {

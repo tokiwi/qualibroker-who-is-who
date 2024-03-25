@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   // if the user is not logged in, try to refresh the token
-  if(!useAuth().user) {
+  if (!useAuth().user) {
     try {
       await useDirectus().client.refresh();
       await useDirectus().getUser();
@@ -16,13 +16,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
   }
 
-  // if the user is still not logged in, redirect to login
-  if (!useAuth().user) {
+  if(!useAuth().user && to.path != '/login') {
+    // user is not logged in, so we redirect to the login page
     return navigateTo('/login')
   }
 
-  // if the user is logged in, redirect to home if trying to access login
-  if (useAuth().user && to.path === '/login') {
+  if(useAuth().user && to.path == '/login') {
+    // user is logged in, so we redirect to the home page
     return navigateTo('/')
   }
 })
