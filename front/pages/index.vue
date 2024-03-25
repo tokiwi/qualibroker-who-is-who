@@ -27,6 +27,7 @@ useHead({
 <script lang="ts">
 import {defineComponent} from 'vue'
 import {readItems} from "@directus/sdk";
+import images from "~/mixins/images";
 
 export default defineComponent({
   name: "me",
@@ -36,27 +37,17 @@ export default defineComponent({
       news: [],
     }
   },
+  mixins: [
+    images,
+  ],
   mounted() {
     this.fetchNews();
   },
   methods: {
     async fetchNews() {
-
-      let items = await useDirectus().client.request(readItems('News', ["title", "header", "description", "id", "category.*", "date"]));
-
-      console.log(items)
-
-      /*const {getItems} = useDirectusItems();
-      try {
-        this.news = await getItems({
-          collection: "News",
-          params: {
-            fields: ["title", "header", "description", "id", "category.*", "date"],
-          }
-        });
-      } catch (error) {
-        console.log(error)
-      }*/
+      this.news = await useDirectus().client.request(readItems('News', {
+        fields: ["title", "header", "description", "id", "category.*", "date"]
+      }));
     },
   }
 })

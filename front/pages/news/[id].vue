@@ -67,10 +67,14 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
 import NewsPerson from "~/components/news/NewsPerson.vue";
+import images from "~/mixins/images";
 
 export default defineComponent({
   name: "[id].vue",
   components: {NewsPerson},
+  mixins: [
+    images,
+  ],
   data() {
     return {
       news: null,
@@ -111,12 +115,6 @@ export default defineComponent({
         }
       ]
     });
-
-    /*const {getThumbnail: img} = useDirectusFiles();*/
-
-    return {
-      img,
-    }
   },
 })
 </script>

@@ -85,7 +85,7 @@ export default {
       try {
         let result = await useDirectus().client.login(this.state.email, this.state.password);
 
-        useDirectus().client.set
+
 
         useToast().add({
           id: 'valid_login',
@@ -111,12 +111,13 @@ export default {
       useRouter().push('/admin/request-reset');
     },
     async refresh() {
-      await fetch('http://localhost:8055/auth/refresh', {
-        method: 'POST',
-        credentials: 'include', // this is required in order to send the refresh token cookie
-      });
+      const {client} = useDirectus();
+      await client.refresh();
     }
   },
+  mounted() {
+    this.refresh();
+  }
 }
 
 </script>

@@ -94,6 +94,8 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
+import {readUser} from "@directus/sdk";
+import img from "~/mixins/images";
 
 export default defineComponent({
   name: "ModalDetail",
@@ -139,21 +141,16 @@ export default defineComponent({
       open: false as boolean,
     }
   },
-  /*setup() {
-    const {getThumbnail: img} = useDirectusFiles();
-    return {img}
-  },*/
+  mixins: [
+      img,
+  ],
   methods: {
     async fetchPerson() {
       if (!this.person) return;
-      /*const {getUserById} = useDirectusUsers();
-      const person = await getUserById({
-        id: this.person,
-        params: {
+
+      this.selectedPerson = await useDirectus().client.request(readUser(this.person, {
           fields: ['*', 'referrer.*', 'batiment.*', 'departement.*']
-        }
-      });*/
-      /*this.selectedPerson = person;*/
+      }))
     },
     formatScheduleToHuman(schedule) {
       // format xx:xx:xx to xxhxx

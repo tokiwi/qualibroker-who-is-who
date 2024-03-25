@@ -7,8 +7,8 @@ export default defineNuxtConfig({
   ssr: false,
   runtimeConfig: {
     public: {
-      directusUrl: 'https://admin.meet.qualibroker-swissriskcare.com'
-      //directusUrl: 'http://localhost:8055'
+      //directusUrl: 'https://admin.meet.qualibroker-swissriskcare.com'
+      directusUrl: 'http://localhost:8055'
     }
   },
 })

@@ -78,7 +78,8 @@
 </template>
 
 <script lang="ts">
-import {definePageMeta} from "#imports";
+import {readUsers} from "@directus/sdk";
+import images from "~/mixins/images";
 
 export default {
   layout: 'default',
@@ -143,34 +144,25 @@ export default {
         }
       ]
     });
-
-    /*const {getThumbnail: img} = useDirectusFiles();
-    return {
-      img
-    }*/
   },
+  mixins: [
+    images,
+  ],
   methods: {
     async fetchEmployees() {
+
       this.loading = true;
-      const {getUsers} = useDirectusUsers();
-      try {
-        this.peoples = await getUsers({
-          params: {
-            fields: "*, departement.*, referrer.*, batiment.*",
-            filter: {
-              role: {
-                name: {
-                  _eq: 'User'
-                }
-              }
+      this.peoples = await useDirectus().client.request(readUsers({
+        fields: "*, departement.*, referrer.*, batiment.*",
+        filter: {
+          role: {
+            name: {
+              _eq: 'User'
             }
           }
-        } as DirectusUserRequest);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        this.loading = false;
-      }
+        }
+      }));
+      this.loading = false;
     },
     formatScheduleToHuman(schedule) {
       // format xx:xx:xx to xxhxx

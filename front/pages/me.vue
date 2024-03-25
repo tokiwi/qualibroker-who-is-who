@@ -67,8 +67,6 @@
               </div>
               <UFormGroup label="Jours" name="availability">
                 <div class="flex flex-wrap gap-3">
-
-
                   <template v-for="day in days" :key="day.label">
                     <div>
                       <UCheckbox color="green" :ui="{'inner': 'ms-1 flex flex-col'}" v-model="state.availability"
@@ -96,10 +94,12 @@
           <div class="p-6 font-bold text-xl">
             Photo de profil
           </div>
-          <div class="p-6 bg-gray-100 flex items-center justify-center">
-            <img :src="img(state.avatar, { width: 300, format: 'jpg' })"
-                 class="w-32 h-32 rounded-full outline outline-offset-4 outline-qualibroker-600" alt="">
-          </div>
+          <template v-if="state && state.avatar">
+            <div class="p-6 bg-gray-100 flex items-center justify-center">
+              <img :src="img(state.avatar, { width: 300, format: 'jpg' })"
+                   class="w-32 h-32 rounded-full outline outline-offset-4 outline-qualibroker-600" alt="">
+            </div>
+          </template>
           <div class="p-6">
             <div class="flex items-center justify-center">
               <input type="file" class="hidden" ref="input-file" @change="handleUploadFile"/>
@@ -113,8 +113,6 @@
 </template>
 
 <script lang="ts" setup>
-import {definePageMeta} from "#imports";
-
 useHead({
   title: 'Mon Profil',
   meta: [
@@ -129,7 +127,9 @@ useHead({
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-/*import {useDirectusUsers} from "#imports";*/
+import images from "~/mixins/images";
+import {useAuth, useDirectus} from "#imports";
+import {readAssetRaw, readItems, readUser, readUsers, updateUser, uploadFiles} from "@directus/sdk";
 
 export default defineComponent({
   name: "me",
@@ -166,7 +166,7 @@ export default defineComponent({
           key: 'sunday'
         }
       ],
-      state: {}/*useDirectusUser()*/,
+      state: {},
       batiments: [],
       departements: [],
       referrers: [],
@@ -174,76 +174,57 @@ export default defineComponent({
     }
   },
   mounted() {
+    this.fetchState();
     this.fetchBatiments();
     this.fetchDepartements();
     this.fetchReferrers();
-
-    if (this.state.availability == null) {
-      this.state.availability = [];
-    }
-    if (this.state.competences == null) {
-      this.state.competences = [];
-    }
   },
+  mixins: [
+    images,
+  ],
   methods: {
-    img(params) {
-      /*const {getThumbnail} = useDirectusFiles();*/
-      /*return getThumbnail(params);*/
+    async fetchState() {
+      this.state = await useDirectus().client.request(readUser(useAuth().user.id, {
+        fields: ['id', 'first_name', 'last_name', 'email', 'avatar', 'location', 'title', 'phone', 'availability', 'schedule_start', 'schedule_end', 'competences', 'departement', 'referrer', 'batiment']
+      }));
+
+      if (this.state.availability == null) {
+        this.state.availability = [];
+      }
+      if (this.state.competences == null) {
+        this.state.competences = [];
+      }
     },
     async fetchBatiments() {
-      /*const {getItems} = useDirectusItems();
-      try {
-        this.batiments = await getItems({
-          collection: "Batiments",
-          params: {
-            fields: ["*"],
-          }
-        });
-      } catch (error) {
-        console.log(error)
-      }*/
+      this.batiments = await useDirectus().client.request(readItems('Batiments', {
+        fields: "*"
+      }))
     },
     async fetchReferrers() {
-      /*try {
-        this.referrers = await useDirectusUsers().getUsers({
-          params: {
-            fields: ["*"],
-            filter: {
-              role: {
-                name: {
-                  _eq: 'User'
-                }
-              },
-              id: {
-                _neq: this.state.id
-              }
+      this.referrers = await useDirectus().client.request(readUsers({
+        fields: ["*"],
+        filter: {
+          role: {
+            name: {
+              _eq: 'User'
             }
+          },
+          id: {
+            _neq: useAuth().user.id
           }
-        });
-
-        this.referrers = this.referrers.map(r => ({
-          ...r,
-          name: `${r.first_name} ${r.last_name}`
-        }))
-      } catch (error) {
-        console.log(error)
-      }*/
+        }
+      }));
+      this.referrers = this.referrers.map(r => ({
+        ...r,
+        name: `${r.first_name} ${r.last_name}`
+      }))
     },
     async fetchDepartements() {
-      /*const {getItems} = useDirectusItems();
-      try {
-        this.departements = await getItems({
-          collection: "Departements",
-          params: {
-            fields: ["*"],
-          }
-        });
-      } catch (error) {
-        console.log(error)
-      }*/
+      this.departements = await useDirectus().client.request(readItems('Departements', {
+        fields: "*"
+      }))
     },
     async update() {
-      /*const {updateUser} = useDirectusUsers();
       let user = this.state;
 
       // we allow edit of first_name, last_name, email, avatar, location, title, phone, availability, schedule_start, schedule_end, competences, departement, referrer, batiment, for all other field, delete them
@@ -263,39 +244,45 @@ export default defineComponent({
         batiment: this.state.batiment,
       }
 
-      await updateUser({
-        id: this.state.id,
-        user
-      });
+      await useDirectus().client.request(updateUser(this.state.id, {
+        first_name: this.state.first_name,
+        last_name: this.state.last_name,
+        avatar: this.state.avatar,
+        location: this.state.location,
+        title: this.state.title,
+        phone: this.state.phone,
+        availability: this.state.availability,
+        schedule_start: this.state.schedule_start,
+        schedule_end: this.state.schedule_end,
+        competences: this.state.competences,
+        departement: this.state.departement,
+        referrer: this.state.referrer,
+        batiment: this.state.batiment,
+      }));
       useToast().add({
         id: 'valid_update',
         title: 'Mise à jour effectuée',
         description: 'Vos informations ont été mises à jour avec succès',
         color: 'green'
-      })*/
+      })
+
+      await this.fetchState();
     },
     updatePhoto() {
       this.$refs['input-file'].click();
     },
     async handleUploadFile(event) {
-      /*this.file = event.target.files[0];
-
-      const directus = useDirectus();
+      this.file = event.target.files[0];
 
       const formData = new FormData();
       formData.append('file_1_property', 'Value');
       formData.append('file', this.file);
 
-      const result = await directus('/files', {
-        method: 'POST',
-        body: formData,
-      })
+      const result = await useDirectus().client.request(uploadFiles(formData));
 
       console.log(result)
-      this.state.avatar = result.data.id;
+      this.state.avatar = result.id;
       await this.update();
-
-      await this.fetchCurrentUser();*/
     }
   }
 })

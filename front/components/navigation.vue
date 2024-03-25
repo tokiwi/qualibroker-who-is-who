@@ -31,19 +31,9 @@ export default defineComponent({
   },
   methods: {
     async fetchNavigations() {
-      this.navigations = await useDirectus().client.request(readItems('navigations', ["*"]));
-      /*const {getItems} = useDirectusItems();
-      try {
-        this.navigations = await getItems({
-          collection: "navigations",
-          params: {
-            fields: "*"
-          }
-        });
-      } catch (e) {
-        console.error(e);
-      } finally {
-      }*/
+      this.navigations = await useDirectus().client.request(readItems('navigations', {
+        fields: "*"
+      }));
     },
   },
 })
