@@ -57,6 +57,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
+      local: parseInt(process.env.LOCAL),
       directus: {
         url: process.env.DIRECTUS_URL,
       }

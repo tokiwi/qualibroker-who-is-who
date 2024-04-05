@@ -18,6 +18,9 @@
             <img :src="img(row.avatar, { width: 60, format: 'jpg' })" alt=""
                  class="aspect-square rounded-full h-full w-full">
           </template>
+          <template v-else>
+            <Icon name="i-heroicons-user-circle" class="text-gray-400 h-full w-full"/>
+          </template>
         </div>
       </template>
       <template #readableName-data="{ row }">
@@ -30,13 +33,11 @@
           </div>
         </div>
       </template>
-      <template #departement-data="{row}">
-        <template v-if="row.departement">
-          {{ row.departement }}
-        </template>
-        <template v-else>
-          -
-        </template>
+      <template #readableWorkplace-data="{row}">
+          {{ row.readableWorkplace }}
+      </template>
+      <template #readableDepartement-data="{row}">
+        {{row.readableDepartement}}
       </template>
       <template #email-data="{ row }">
         <template v-if="row.email">
@@ -47,8 +48,19 @@
         </template>
       </template>
       <template #phone-data="{row}">
+        <template v-if="row.phone || row.phone_mobile">
         <template v-if="row.phone">
-          <a :href="`tel:${row.phone}`">{{ row.phone }}</a>
+          <a :href="`tel:${row.phone}`" class="flex gap-1 items-center">
+            <Icon dynamic name="i-material-symbols-call"></Icon>
+            <div>{{ row.phone }}</div>
+          </a>
+        </template>
+        <template v-if="row.phone_mobile">
+          <a :href="`tel:${row.phone_mobile}`" class="flex gap-1 items-center">
+            <Icon dynamic name="i-material-symbols-phone-android-outline"></Icon>
+            <div>{{ row.phone_mobile }}</div>
+          </a>
+        </template>
         </template>
         <template v-else>
           -
@@ -97,7 +109,12 @@ export default {
           sortable: true,
         },
         {
-          key: 'departement',
+          key: 'readableWorkplace',
+          label: 'Lieu de travail',
+          sortable: true,
+        },
+        {
+          key: 'readableDepartement',
           label: 'Département',
           sortable: true,
         },
@@ -150,17 +167,16 @@ export default {
   ],
   methods: {
     async fetchEmployees() {
-
       this.loading = true;
       this.peoples = await useDirectus().client.request(readUsers({
-        fields: "*, departement.*, referrer.*, batiment.*",
-        filter: {
+        fields: "*, departement.*, referrer.*, batiment.*, workplace.*",
+        /*filter: {
           role: {
             name: {
               _eq: 'User'
             }
           }
-        }
+        }*/
       }));
       this.loading = false;
     },
@@ -173,13 +189,12 @@ export default {
   computed: {
     formatedPeoples() {
       return this.peoples.map(person => {
-        if (person.departement && typeof person.departement === 'object') {
-          person.departement = person.departement.name;
+        return {
+          ...person,
+          readableName: person?.first_name || person?.last_name ? `${person?.first_name || ''} ${person?.last_name || ''}` : person.email,
+          readableWorkplace: `${person?.workplace?.name || '-'}`,
+          readableDepartement: `${person?.departement?.name || '-'}`,
         }
-        if (person.first_name || person.last_name) {
-          person.readableName = `${person.first_name} ${person.last_name}`;
-        }
-        return person;
       })
     },
     filteredPeoples() {

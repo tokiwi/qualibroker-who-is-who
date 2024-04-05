@@ -1,6 +1,6 @@
 <template>
   <UModal v-model="open">
-    <UCard v-if="selectedPerson">
+    <UCard v-if="selectedPerson" :ui="{body: {padding: 'p-3 sm:p-3'}}">
       <template #header>
         <div class="flex gap-4">
           <div class="w-14 h-14 shrink-0">
@@ -9,7 +9,7 @@
           </div>
           <div>
             <div class="text-xl">
-              {{ selectedPerson?.first_name }} {{ selectedPerson?.last_name}}
+              {{ selectedPerson?.first_name }} {{ selectedPerson?.last_name }}
             </div>
             <div>
               {{ selectedPerson?.title || '-' }}
@@ -18,73 +18,144 @@
           <UIcon name="i-heroicons-x-mark" @click="open = false" class="ml-auto text-xl cursor-pointer p-2"/>
         </div>
       </template>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4">
-        <div class="flex flex-col">
-          <div class="font-light text-sm">
-            Email
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-col rounded-xl border">
+          <div class="text-lg text-gray-600 px-2.5 py-1.5 border-b">
+            Contact
           </div>
-          <div class="font-medium">
-            <a :href="`mailto:${selectedPerson?.email}`">{{ selectedPerson?.email || '-' }}</a>
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <div class="font-light text-sm">
-            Téléphone
-          </div>
-          <div class="font-medium">
-            <a :href="`tel:${selectedPerson?.phone}`">{{ selectedPerson?.phone || '-' }}</a>
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <AvailabilityList :availabilities="selectedPerson?.availability"></AvailabilityList>
-        </div>
-        <div class="flex flex-col">
-          <div class="font-light text-sm">
-            Horaires
-          </div>
-          <div class="font-medium">
-            {{ formatScheduleToHuman(selectedPerson?.schedule_start) }} -
-            {{ formatScheduleToHuman(selectedPerson?.schedule_end) }}
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <div class="font-light text-sm">
-            Departement
-          </div>
-          <div class="font-medium">
-            {{ selectedPerson?.departement?.name || '-' }}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4 px-2.5 py-2">
+            <div class="flex flex-col">
+              <div class="font-light text-sm">
+                Email
+              </div>
+              <div class="font-medium">
+                <a :href="`mailto:${selectedPerson?.email}`">{{ selectedPerson?.email || '-' }}</a>
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div class="font-light text-sm">
+                Téléphone
+              </div>
+              <div class="font-medium">
+                <a :href="`tel:${selectedPerson?.phone}`" class="flex gap-1 items-center">
+                  <Icon dynamic name="i-material-symbols-call"></Icon>
+                  <div>{{ selectedPerson?.phone || '-' }}</div>
+                </a>
+                <a :href="`tel:${selectedPerson?.phone_mobile}`" class="flex gap-1 items-center">
+                  <Icon dynamic name="i-material-symbols-phone-android-outline"></Icon>
+                  <div>{{ selectedPerson?.phone_mobile || '-' }}</div>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="flex flex-col">
-          <div class="font-light text-sm">
-            Batiment
+        <div class="flex flex-col rounded-xl border">
+          <div class="text-lg text-gray-600 px-2.5 py-1.5 border-b">
+            Disponibilité
           </div>
-          <div class="font-medium">
-            {{ selectedPerson?.batiment?.name || '-' }}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4 px-2.5 py-2">
+            <div class="flex flex-col" v-if="selectedPerson?.availability">
+              <AvailabilityList :availabilities="selectedPerson?.availability"></AvailabilityList>
+            </div>
+            <div class="flex flex-col">
+              <div class="font-light text-sm">
+                Horaires
+              </div>
+              <div class="font-medium">
+                {{ formatScheduleToHuman(selectedPerson?.schedule_start) }} -
+                {{ formatScheduleToHuman(selectedPerson?.schedule_end) }}
+              </div>
+            </div>
           </div>
         </div>
-        <div class="flex flex-col">
-          <div class="font-light text-sm">
-            Référent
+        <div class="flex flex-col rounded-xl border">
+          <div class="text-lg text-gray-600 px-2.5 py-1.5 border-b">
+            Skills
           </div>
-          <div class="font-medium">
-            <template v-if="selectedPerson.referrer && selectedPerson.referrer.first_name">
-              <div class="text-qualibroker-600 cursor-pointer"
-                   @click="localPerson = selectedPerson.referrer.id">
-                {{ selectedPerson.referrer.first_name }} {{ selectedPerson.referrer.last_name }}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4 px-2.5 py-2">
+            <div class="col-span-1">
+              <div class="font-light text-sm">
+                Compétences
+              </div>
+              <div class="font-medium">
+                {{ selectedPerson?.competences?.join(', ') || '-' }}
+              </div>
+            </div>
+            <div class="col-span-1">
+              <div class="font-light text-sm">
+                Langues
+              </div>
+              <div class="font-medium">
+                {{ selectedPerson?.languages?.join(', ') || '-' }}
+              </div>
+            </div>
+            <div class="col-span-1">
+              <div class="font-light text-sm">
+                Activité principale
+              </div>
+              <div class="font-medium">
+                {{ selectedPerson?.activities?.name || '-' }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col rounded-xl border">
+          <div class="text-lg text-gray-600 px-2.5 py-1.5 border-b">
+            Général
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4 px-2.5 py-2">
+            <div class="flex flex-col">
+              <div class="font-light text-sm">
+                Lieu de travail
+              </div>
+              <div class="font-medium">
+                {{ selectedPerson?.workplace?.name || '-' }}
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div class="font-light text-sm">
+                Departement
+              </div>
+              <div class="font-medium">
+                {{ selectedPerson?.departement?.name || '-' }}
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div class="font-light text-sm">
+                Batiment
+              </div>
+              <div class="font-medium">
+                {{ selectedPerson?.batiment?.name || '-' }}
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div class="font-light text-sm">
+                Référent
+              </div>
+              <div class="font-medium">
+                <template v-if="selectedPerson.referrer && selectedPerson.referrer.first_name">
+                  <div class="text-qualibroker-600 cursor-pointer"
+                       @click="localPerson = selectedPerson.referrer.id">
+                    {{ selectedPerson.referrer.first_name }} {{ selectedPerson.referrer.last_name }}
+                  </div>
+                </template>
+                <template v-else>
+                  -
+                </template>
+              </div>
+            </div>
+            <template v-if="selectedPerson?.linkedin">
+              <div class="col-span-1 md:col-span-2">
+                <div class="font-light text-sm">
+                  Réseau sociaux
+                </div>
+                <div class="font-medium flex items-center gap-2">
+                  <a :href="selectedPerson?.linkedin" target="_blank">
+                    <Icon dynamic name="i-bxl-linkedin" class="text-xl"></Icon>
+                  </a>
+                </div>
               </div>
             </template>
-            <template v-else>
-              -
-            </template>
-          </div>
-        </div>
-        <div class="col-span-1 md:col-span-2">
-          <div class="font-light text-sm">
-            Compétences
-          </div>
-          <div class="font-medium">
-            {{ localPerson?.competences?.join(', ') || '-' }}
           </div>
         </div>
       </div>
@@ -120,7 +191,7 @@ export default defineComponent({
     person: {
       immediate: true,
       handler(value) {
-        if(value) {
+        if (value) {
           this.open = true
         }
         this.fetchPerson()
@@ -142,15 +213,19 @@ export default defineComponent({
     }
   },
   mixins: [
-      img,
+    img,
   ],
   methods: {
     async fetchPerson() {
       if (!this.person) return;
 
       this.selectedPerson = await useDirectus().client.request(readUser(this.person, {
-          fields: ['*', 'referrer.*', 'batiment.*', 'departement.*']
+        fields: ['*', 'referrer.*', 'batiment.*', 'departement.*', 'workplace.*', 'activities.*']
       }))
+
+      if(this.selectedPerson?.availabilities) {
+        this.selectedPerson.availabilities = []
+      }
     },
     formatScheduleToHuman(schedule) {
       // format xx:xx:xx to xxhxx

@@ -22,20 +22,26 @@
                 <UFormGroup label="Titre" name="title">
                   <UInput v-model="state.title"/>
                 </UFormGroup>
-                <UFormGroup label="Email" name="email">
-                  <UInput v-model="state.email" readonly/>
+                <UFormGroup label="Email" name="email" aria-disabled="true">
+                  <UInput v-model="state.email" readonly disabled/>
                 </UFormGroup>
-                <UFormGroup label="Téléphone" name="phone">
-                  <UInput v-model="state.phone"/>
+                <UFormGroup label="Téléphone bureau" name="phone">
+                  <UInput v-model="state.phone" v-maska data-maska="+## ### ## ##"/>
                 </UFormGroup>
-                <template v-if="batiments">
-                  <UFormGroup label="Batiment" name="batiment">
-                    <USelectMenu v-model="state.batiment"
+                <UFormGroup label="Téléphone mobile" name="phone_mobile">
+                  <UInput v-model="state.phone_mobile" v-maska data-maska="+## ### ## ##"/>
+                </UFormGroup>
+                <UFormGroup label="Profil linkedin" name="linkedin">
+                  <UInput v-model="state.linkedin"/>
+                </UFormGroup>
+                <template v-if="workplaces">
+                  <UFormGroup label="Lieu de travail" name="workplace">
+                    <USelectMenu v-model="state.workplace"
                                  searchable
-                                 searchable-placeholder="Rechercher un batiment"
+                                 searchable-placeholder="Rechercher un département"
                                  value-attribute="id"
                                  option-attribute="name"
-                                 :options="batiments"/>
+                                 :options="workplaces"/>
                   </UFormGroup>
                 </template>
                 <template v-if="departements">
@@ -48,8 +54,17 @@
                                  :options="departements"/>
                   </UFormGroup>
                 </template>
+                <template v-if="batiments">
+                  <UFormGroup label="Batiment" name="batiment">
+                    <USelectMenu v-model="state.batiment"
+                                 searchable
+                                 searchable-placeholder="Rechercher un batiment"
+                                 value-attribute="id"
+                                 option-attribute="name"
+                                 :options="batiments"/>
+                  </UFormGroup>
+                </template>
                 <template v-if="referrers">
-
                   <UFormGroup label="Référant" name="referrer">
                     <USelectMenu v-model="state.referrer"
                                  searchable
@@ -83,7 +98,43 @@
                   <UInput type="time" v-model="state.schedule_end"/>
                 </UFormGroup>
               </div>
-              <CompetencesList v-model="state.competences"></CompetencesList>
+              <div class="font-bold text-xl">
+                Skills
+              </div>
+              <template v-if="activities">
+                <UFormGroup label="Activité principal " name="activities">
+                  <USelectMenu v-model="state.activities"
+                               searchable
+                               searchable-placeholder="Rechercher une activité"
+                               value-attribute="id"
+                               option-attribute="name"
+                               :options="activities"/>
+                </UFormGroup>
+              </template>
+              <div class="flex gap-4">
+                <div class="" aria-disabled="true">
+                  <div class="">
+                    <div class="flex content-center items-center justify-between text-sm">
+                      <label for="" class="block font-medium text-gray-700 dark:text-gray-200">Compétences</label>
+                    </div>
+                  </div>
+                  <div class="mt-1 relative" v-if="state.competences">
+                    <CompetencesList v-model="state.competences"></CompetencesList>
+                  </div>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="" aria-disabled="true">
+                  <div class="">
+                    <div class="flex content-center items-center justify-between text-sm">
+                      <label for="" class="block font-medium text-gray-700 dark:text-gray-200">Langues</label>
+                    </div>
+                  </div>
+                  <div class="mt-1 relative" v-if="state.languages">
+                    <LanguagesList v-model="state.languages"></LanguagesList>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="col-span-1 md:col-span-2 flex gap-2 justify-end">
               <UButton size="lg" type="submit" class="text-center">Sauvegarder</UButton>
@@ -170,6 +221,8 @@ export default defineComponent({
       batiments: [],
       departements: [],
       referrers: [],
+      workplaces: [],
+      activities: [],
       file: null,
     }
   },
@@ -178,6 +231,8 @@ export default defineComponent({
     this.fetchBatiments();
     this.fetchDepartements();
     this.fetchReferrers();
+    this.fetchWorkplaces();
+    this.fetchActivities();
   },
   mixins: [
     images,
@@ -185,20 +240,39 @@ export default defineComponent({
   methods: {
     async fetchState() {
       this.state = await useDirectus().client.request(readUser(useAuth().user.id, {
-        fields: ['id', 'first_name', 'last_name', 'email', 'avatar', 'location', 'title', 'phone', 'availability', 'schedule_start', 'schedule_end', 'competences', 'departement', 'referrer', 'batiment']
+        fields: [
+          'id',
+          'first_name',
+          'last_name',
+          'email',
+          'avatar',
+          'location',
+          'title',
+          'phone',
+          'phone_mobile',
+          'availability',
+          'schedule_start',
+          'schedule_end',
+          'competences',
+          'departement',
+          'referrer',
+          'batiment',
+          'workplace',
+          'linkedin',
+          'activities',
+          'languages',
+        ]
       }));
 
-      if (this.state.availability == null) {
+      if (this.state.availability === null || this.state.availability === undefined) {
         this.state.availability = [];
       }
-      if (this.state.competences == null) {
+      if (this.state.competences === null || this.state.competences === undefined) {
         this.state.competences = [];
       }
-    },
-    async fetchBatiments() {
-      this.batiments = await useDirectus().client.request(readItems('Batiments', {
-        fields: "*"
-      }))
+      if (this.state.languages === null || this.state.languages === undefined) {
+        this.state.languages = [];
+      }
     },
     async fetchReferrers() {
       this.referrers = await useDirectus().client.request(readUsers({
@@ -212,16 +286,36 @@ export default defineComponent({
           id: {
             _neq: useAuth().user.id
           }
-        }
+        },
+        sort: ['first_name']
       }));
       this.referrers = this.referrers.map(r => ({
         ...r,
-        name: `${r.first_name} ${r.last_name}`
+        name: r.first_name || r.last_name ? `${r.first_name || ''} ${r.last_name || ''}` : r.email
+      }))
+    },
+    async fetchBatiments() {
+      this.batiments = await useDirectus().client.request(readItems('Batiments', {
+        fields: "*",
+        sort: ['name']
       }))
     },
     async fetchDepartements() {
       this.departements = await useDirectus().client.request(readItems('Departements', {
-        fields: "*"
+        fields: "*",
+        sort: ['name']
+      }))
+    },
+    async fetchWorkplaces() {
+      this.workplaces = await useDirectus().client.request(readItems('Workplace', {
+        fields: "*",
+        sort: ['name']
+      }))
+    },
+    async fetchActivities() {
+      this.activities = await useDirectus().client.request(readItems('Activities', {
+        fields: "*",
+        sort: ['name']
       }))
     },
     async update() {
@@ -235,6 +329,7 @@ export default defineComponent({
         location: this.state.location,
         title: this.state.title,
         phone: this.state.phone,
+        phone_mobile: this.state.phone_mobile,
         availability: this.state.availability,
         schedule_start: this.state.schedule_start,
         schedule_end: this.state.schedule_end,
@@ -242,6 +337,10 @@ export default defineComponent({
         departement: this.state.departement,
         referrer: this.state.referrer,
         batiment: this.state.batiment,
+        workplace: this.state.workplace,
+        linkedin: this.state.linkedin,
+        activities: this.state.activities,
+        languages: this.state.languages
       }
 
       await useDirectus().client.request(updateUser(this.state.id, {
@@ -251,6 +350,7 @@ export default defineComponent({
         location: this.state.location,
         title: this.state.title,
         phone: this.state.phone,
+        phone_mobile: this.state.phone_mobile,
         availability: this.state.availability,
         schedule_start: this.state.schedule_start,
         schedule_end: this.state.schedule_end,
@@ -258,6 +358,10 @@ export default defineComponent({
         departement: this.state.departement,
         referrer: this.state.referrer,
         batiment: this.state.batiment,
+        workplace: this.state.workplace,
+        linkedin: this.state.linkedin,
+        activities: this.state.activities,
+        languages: this.state.languages
       }));
       useToast().add({
         id: 'valid_update',
@@ -280,7 +384,6 @@ export default defineComponent({
 
       const result = await useDirectus().client.request(uploadFiles(formData));
 
-      console.log(result)
       this.state.avatar = result.id;
       await this.update();
     }

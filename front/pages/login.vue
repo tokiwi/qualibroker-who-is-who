@@ -1,7 +1,8 @@
 <template>
   <div class="h-full w-full flex items-center justify-center grow">
     <div class="bg-white rounded-xl p-5 flex flex-col gap-4 min-w-[340px]">
-<!--      <UForm :schema="schema" :state="state" @submit="login" class="flex flex-col gap-4">
+      <template v-if="isLocalVersion">
+      <UForm :schema="schema" :state="state" @submit="login" class="flex flex-col gap-4">
         <UFormGroup label="Email" name="email">
           <UInput type="text" v-model="state.email" placeholder="john.doe@qualibroker.ch"/>
         </UFormGroup>
@@ -12,7 +13,8 @@
           <UButton type="submit" class="text-center">Se connecter</UButton>
           <UButton @click="forget" color="gray">Mot de passe oublié ?</UButton>
         </div>
-      </UForm>-->
+      </UForm>
+      </template>
 <!--      <a href="http://localhost:8055/auth/login/microsoft?redirect=http://localhost:3000/login"
               class="flex gap-1 justify-center bg-gray-100 transition-all duration-200 hover:bg-gray-200 rounded-lg border border-gray-300 items-center group overflow-hidden">
           <span
@@ -40,6 +42,7 @@
 <script lang="ts">
 import {object, ref, string} from "yup";
 import {useDirectus} from "#imports";
+import {login} from "@directus/sdk";
 
 export default {
   data() {
@@ -51,7 +54,8 @@ export default {
       state: {
         email: '',
         password: ''
-      }
+      },
+      isLocalVersion: useRuntimeConfig().public.local
     }
   },
   setup() {
@@ -70,7 +74,7 @@ export default {
     async login() {
       console.log(useDirectus())
       try {
-        let result = await useDirectus().client.login(this.state.email, this.state.password);
+        let result = await useDirectus().client.request(login(this.state.email, this.state.password));
 
         useToast().add({
           id: 'valid_login',
@@ -78,9 +82,9 @@ export default {
           description: 'Vous allez maintenant être redirigé sur la page d\'accueil',
           color: 'green'
         })
-        /*setTimeout(() => {
+        setTimeout(() => {
           useRouter().push('/')
-        }, 1000);*/
+        }, 1000);
       } catch (e) {
         console.log(e);
         useToast().add({

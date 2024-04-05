@@ -3,13 +3,8 @@
     <Navigation></Navigation>
     <template v-if="news">
       <div class="w-full max-w-screen-xl mx-auto bg-white pb-7">
-        <template v-if="news.header">
-          <div class="aspect-[10/5] relative">
-            <img :src="img(news.header, { width: 1024, format: 'jpg' })" alt="image"
-                 class="w-full object-cover h-full object-center absolute inset-0">
-          </div>
-        </template>
-        <div class="grid grid-cols-12 gap-4 px-4 py-6">
+<!--        -->
+        <div class="grid grid-cols-12 gap-4 px-4 pb-6 pt-10">
           <div class="col-span-2 relative">
             <div class="flex flex-col gap-4 items-center text-center">
               <template v-if="news.author">
@@ -50,6 +45,12 @@
               <h2 class="text-base">
                 {{ news.description }}
               </h2>
+            </template>
+            <template v-if="news.header">
+              <div class="aspect-[16/9] relative">
+                <img :src="img(news.header, { width: 1024, format: 'jpg' })" alt="image"
+                     class="w-full object-cover h-full object-center absolute inset-0">
+              </div>
             </template>
             <template v-if="news.text">
               <div v-html="news.text" class="html-content"></div>
