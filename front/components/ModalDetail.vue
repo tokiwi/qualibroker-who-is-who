@@ -78,7 +78,16 @@
                 Compétences
               </div>
               <div class="font-medium">
-                {{ selectedPerson?.competences?.join(', ') || '-' }}
+                <template v-if="selectedPerson?.competences?.length > 0">
+                  <ul class="list-disc pl-5">
+                    <template v-for="competence in selectedPerson?.competences">
+                      <li>{{ competence }}</li>
+                    </template>
+                  </ul>
+                </template>
+                <template v-else>
+                  -
+                </template>
               </div>
             </div>
             <div class="col-span-1">
@@ -86,7 +95,16 @@
                 Langues
               </div>
               <div class="font-medium">
-                {{ selectedPerson?.languages?.join(', ') || '-' }}
+                <template v-if="selectedPerson?.languages?.length > 0">
+                  <ul class="list-disc pl-5">
+                    <template v-for="language in selectedPerson?.languages">
+                      <li>{{ language }}</li>
+                    </template>
+                  </ul>
+                </template>
+                <template v-else>
+                  -
+                </template>
               </div>
             </div>
             <div class="col-span-1">
@@ -118,14 +136,6 @@
               </div>
               <div class="font-medium">
                 {{ selectedPerson?.departement?.name || '-' }}
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <div class="font-light text-sm">
-                Batiment
-              </div>
-              <div class="font-medium">
-                {{ selectedPerson?.batiment?.name || '-' }}
               </div>
             </div>
             <div class="flex flex-col">
@@ -223,7 +233,7 @@ export default defineComponent({
         fields: ['*', 'referrer.*', 'batiment.*', 'departement.*', 'workplace.*', 'activities.*']
       }))
 
-      if(this.selectedPerson?.availabilities) {
+      if (this.selectedPerson?.availabilities) {
         this.selectedPerson.availabilities = []
       }
     },

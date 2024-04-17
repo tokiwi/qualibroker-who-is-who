@@ -170,13 +170,13 @@ export default {
       this.loading = true;
       this.peoples = await useDirectus().client.request(readUsers({
         fields: "*, departement.*, referrer.*, batiment.*, workplace.*",
-        /*filter: {
+        filter: {
           role: {
             name: {
               _eq: 'User'
             }
           }
-        }*/
+        }
       }));
       this.loading = false;
     },

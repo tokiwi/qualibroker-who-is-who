@@ -54,16 +54,6 @@
                                  :options="departements"/>
                   </UFormGroup>
                 </template>
-                <template v-if="batiments">
-                  <UFormGroup label="Batiment" name="batiment">
-                    <USelectMenu v-model="state.batiment"
-                                 searchable
-                                 searchable-placeholder="Rechercher un batiment"
-                                 value-attribute="id"
-                                 option-attribute="name"
-                                 :options="batiments"/>
-                  </UFormGroup>
-                </template>
                 <template v-if="referrers">
                   <UFormGroup label="Référant" name="referrer">
                     <USelectMenu v-model="state.referrer"
@@ -218,7 +208,6 @@ export default defineComponent({
         }
       ],
       state: {},
-      batiments: [],
       departements: [],
       referrers: [],
       workplaces: [],
@@ -228,7 +217,6 @@ export default defineComponent({
   },
   mounted() {
     this.fetchState();
-    this.fetchBatiments();
     this.fetchDepartements();
     this.fetchReferrers();
     this.fetchWorkplaces();
@@ -256,7 +244,6 @@ export default defineComponent({
           'competences',
           'departement',
           'referrer',
-          'batiment',
           'workplace',
           'linkedin',
           'activities',
@@ -294,12 +281,6 @@ export default defineComponent({
         name: r.first_name || r.last_name ? `${r.first_name || ''} ${r.last_name || ''}` : r.email
       }))
     },
-    async fetchBatiments() {
-      this.batiments = await useDirectus().client.request(readItems('Batiments', {
-        fields: "*",
-        sort: ['name']
-      }))
-    },
     async fetchDepartements() {
       this.departements = await useDirectus().client.request(readItems('Departements', {
         fields: "*",
@@ -321,7 +302,7 @@ export default defineComponent({
     async update() {
       let user = this.state;
 
-      // we allow edit of first_name, last_name, email, avatar, location, title, phone, availability, schedule_start, schedule_end, competences, departement, referrer, batiment, for all other field, delete them
+      // we allow edit of first_name, last_name, email, avatar, location, title, phone, availability, schedule_start, schedule_end, competences, departement, referrer, for all other field, delete them
       user = {
         first_name: this.state.first_name,
         last_name: this.state.last_name,
@@ -336,7 +317,6 @@ export default defineComponent({
         competences: this.state.competences,
         departement: this.state.departement,
         referrer: this.state.referrer,
-        batiment: this.state.batiment,
         workplace: this.state.workplace,
         linkedin: this.state.linkedin,
         activities: this.state.activities,
@@ -357,7 +337,6 @@ export default defineComponent({
         competences: this.state.competences,
         departement: this.state.departement,
         referrer: this.state.referrer,
-        batiment: this.state.batiment,
         workplace: this.state.workplace,
         linkedin: this.state.linkedin,
         activities: this.state.activities,

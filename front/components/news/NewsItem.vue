@@ -1,7 +1,7 @@
 <template>
   <nuxt-link :to="`/news/${news.id}`" class="bg-white rounded-xl overflow-hidden">
-      <div class="aspect-video relative">
-        <img :src="img(news.header, { width: 400, format: 'jpg' })" alt="image" class="w-full object-cover">
+      <div class="aspect-[1/1] relative">
+        <img :src="img(news.header, { width: 400, height: 400, format: 'jpg' })" alt="image" class="h-full w-full object-cover">
       </div>
     <div class="p-4 space-y-1">
       <div class="flex justify-between items-start">
