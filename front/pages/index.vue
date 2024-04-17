@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col gap-5 pt-10">
     <Navigation></Navigation>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div class="flex flex-wrap gap-4">
       <template v-for="_new in news" :key="_new.id">
-        <NewsItem :news="_new"></NewsItem>
+        <NewsItem :news="_new" class="w-full sm:w-1/2 md:w-1/3"></NewsItem>
       </template>
     </div>
   </div>

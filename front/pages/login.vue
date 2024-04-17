@@ -72,7 +72,6 @@ export default {
   },
   methods: {
     async login() {
-      console.log(useDirectus())
       try {
         let result = await useDirectus().client.request(login(this.state.email, this.state.password));
 
