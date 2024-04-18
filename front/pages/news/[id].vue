@@ -5,7 +5,7 @@
       <div class="w-full max-w-screen-xl mx-auto bg-white pb-7">
 <!--        -->
         <div class="grid grid-cols-12 gap-4 px-4 pb-6 pt-10">
-          <div class="col-span-2 relative">
+          <div class="col-span-12 order-last md:order-first md:col-span-2 relative">
             <div class="flex flex-col gap-4 items-center text-center">
               <template v-if="news.author">
                 <div>
@@ -35,16 +35,15 @@
               </template>
             </div>
           </div>
-          <div class="col-span-6 col-start-4 space-y-4">
+          <div class="col-span-12 md:col-span-8 md:col-start-4 space-y-4">
             <template v-if="news.title">
               <h1 class="text-5xl font-bold">
                 {{ news.title }}
               </h1>
             </template>
             <template v-if="news.description">
-              <h2 class="text-base">
-                {{ news.description }}
-              </h2>
+              <div class="html-content text-base" v-html="news.description">
+              </div>
             </template>
             <template v-if="news.header">
               <div class="aspect-[16/9] relative">
